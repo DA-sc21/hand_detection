@@ -3,7 +3,8 @@ import scipy.io as sio
 import numpy as np
 import os
 import cv2
-import random
+import shutil
+import glob
 
 def get_bbox_visualize(base_path, dir):
     image_path_array = []
@@ -13,11 +14,11 @@ def get_bbox_visualize(base_path, dir):
                 img_path = base_path + dir + "/" + f
                 image_path_array.append(img_path)
 
-    #sort image_path_array to ensure its in the low to high order expected in polygon.mat
+
     image_path_array.sort()
     boxes = sio.loadmat(
         base_path + dir + "/polygons.mat")
-    # there are 100 of these per folder in the egohands dataset
+
     polygons = boxes["polygons"][0]
     # first = polygons[0]
     # print(len(first))
@@ -72,7 +73,7 @@ def get_bbox_visualize(base_path, dir):
             hold['maxy'] = max_y
             if (min_x > 0 and min_y > 0 and max_x > 0 and max_y > 0):
                 boxarray.append(hold)
-                labelrow = [tail, min_x, min_y, max_x, max_y,0]
+                labelrow = [tail, np.size(img, 1), np.size(img, 0),0,min_x, min_y, max_x, max_y]
                 label_arr.append(labelrow)
 
             cv2.polylines(img, [pst], True, (0, 255, 255), 1)
@@ -99,28 +100,24 @@ def get_bbox_visualize(base_path, dir):
                         else :
                             txt_file.write("\n")
                       
-                        
-                    
-
+                                       
             print("===== saving txt file for ", tail)
         cv2.waitKey(2)  # close window when a key press is detected
-
-
-def create_directory(dir_path):
-    if not os.path.exists(dir_path):
-        os.makedirs(dir_path)
-
-# combine all individual csv files for each image into a single csv file per folder.
-
 
 def generate_txt_files(image_dir):
     for root, dirs, filenames in os.walk(image_dir):
         for dir in dirs:
             get_bbox_visualize(image_dir, dir)
+            filepaths = glob.glob(root+dir+"/*.txt") + glob.glob(root+dir+"/*.jpg")
+            for filepath in filepaths:
+                shutil.move(filepath,'images')
+    
+    os.rmdir('egohands_data')
+
     print("label generation complete!\n")
 
 
-# rename image files so we can have them all in a train/test/eval folder.
+
 def rename_files(image_dir):
     print("Renaming files")
     loop_index = 0
