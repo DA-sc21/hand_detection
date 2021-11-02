@@ -1,5 +1,57 @@
 # hand_detection
 
+## analysis result
+
+### structure
+```
+.
+├── README.md
+├── dataset
+│   ├── aug_utils
+│   │   ├── bbox_util.py
+│   │   ├── data_aug.py
+│   ├── custom
+│   │   ├── images
+│   │   ├── ssd_annotations
+│   │   ├── temp_annotations
+│   │   ├── xml2txt.py
+│   │   └── yolo_annotations
+│   ├── egohand
+│   │   ├── egohands_data
+│   │   │   ├── _LABELLED_SAMPLES
+│   │   ├── mat2txt.py
+│   │   ├── ssd_annotations
+│   │   ├── temp_annotations
+│   │   └── yolo_annotations
+│   ├── raw_custom
+│   │   ├── video
+│   │   ├── image2label.py
+│   │   └── video2image.py
+│   ├── custom_augmentation.sh
+│   ├── egohand_augmentation.sh
+│   ├── augmentation.py
+│   ├── split_data.py
+│   ├── ssd_prepare.py 
+│   └── yolo_prepare.py
+├── modules
+│   ├── handmodels.py
+├── train
+│   ├── train_ssd_mobilenetv2.py
+│   ├── train_yolov4.ipynb
+│   ├── train_yolov3.ipynb
+├── test.py
+├── demo.py
+├── requirements.txt
+├── README.md
+└── venv
+```
+
+## How to test?
+
+0. 환경 구축 
+ 0-1. virtualenv 환경 구축
+ 0-2. requirement.txt 설치
+
 1. dataset 준비
  1-1. label 을 txt로 변환하기 
    * egohand dataset(.mat -> .txt)
@@ -31,8 +83,11 @@
 
  1-2. data augmentation
    ```bash
-   $ cd dataset/{dataset_name}
-   $ python augmentation.py
+   # custom
+   $ sh custom_augmentation.sh
+
+   #egohand
+   $ sh egohand_augmentation.sh
    ```
 
  1-3. train/ test data split (9:1)
@@ -84,3 +139,22 @@
   yolov4-tiny
   yolov3-tiny
   google mediapipe palm detection
+
+
+#### reference
+* dataset
+
+* data labeling
+
+* data augmentation
+  - https://github.com/Paperspace/DataAugmentationForObjectDetection  
+
+* model
+  - ssd_mobilenetv1
+  https://github.com/victordibia/handtracking
+  - ssd_mobilenetv2
+  https://github.com/tensorflow/models
+  - yolov3, yolov4
+  https://github.com/AlexeyAB/darknet
+  - google mediapipe palm detection
+  https://github.com/google/mediapipe 
