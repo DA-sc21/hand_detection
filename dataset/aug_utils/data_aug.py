@@ -38,18 +38,18 @@ class RandomHorizontalFlip(object):
         self.p = p
 
     def __call__(self, img, bboxes):
-            img_center = np.array(img.shape[:2])[::-1]/2
-            img_center = np.hstack((img_center, img_center))
-            if random.random() < self.p:
-                img = img[:, ::-1, :]
-                bboxes[:, [0, 2]] += 2*(img_center[[0, 2]] - bboxes[:, [0, 2]])
+        img_center = np.array(img.shape[:2])[::-1]/2
+        img_center = np.hstack((img_center, img_center))
+        if random.random() < self.p:                
+            img = img[:, ::-1, :]
+            bboxes[:, [0, 2]] += 2*(img_center[[0, 2]] - bboxes[:, [0, 2]])
 
-                box_w = abs(bboxes[:, 0] - bboxes[:, 2])
+            box_w = abs(bboxes[:, 0] - bboxes[:, 2])
 
-                bboxes[:, 0] -= box_w
-                bboxes[:, 2] += box_w
+            bboxes[:, 0] -= box_w
+            bboxes[:, 2] += box_w
 
-            return img, bboxes
+        return img, bboxes
 
 
 class HorizontalFlip(object):
@@ -136,9 +136,7 @@ class RandomScale(object):
 
         
 
-    def __call__(self, img, bboxes):
-    
-        
+    def __call__(self, img, bboxes):     
         #Chose a random digit to scale by 
         
         img_shape = img.shape
@@ -321,10 +319,6 @@ class RandomTranslate(object):
         
         bboxes = clip_box(bboxes, [0,0,img_shape[1], img_shape[0]], 0.25)
         
-    
-        
-    
-        
         return img, bboxes
     
 
@@ -444,8 +438,9 @@ class RandomRotate(object):
             self.angle = (-self.angle, self.angle)
             
     def __call__(self, img, bboxes):
-    
-        angle = random.uniform(*self.angle)
+        
+        # angle = random.uniform(*self.angle)
+        angle = random.choices([0,90,180,270],[0.25,0.25,0.25,0.25])[0]
     
         w,h = img.shape[1], img.shape[0]
         cx, cy = w//2, h//2
@@ -782,9 +777,7 @@ class RandomHSV(object):
         if brightness:
             self.brightness = brightness
         else:
-            self.brightness = 0
-            
-            
+            self.brightness = 0          
 
         if type(self.hue) != tuple:
             self.hue = (-self.hue, self.hue)
