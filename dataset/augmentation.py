@@ -33,7 +33,7 @@ def augmentation(opt):
         transforms = Sequence([RandomHorizontalFlip(1), 
         RandomHSV(hue=opt.hsv,saturation=opt.saturation, brightness=opt.brightness),
         RandomRotate(opt.rotation),
-        RandomScale(opt.scaling, diff = True if opt.scaling>0 else False), 
+        RandomScale(opt.scaling, diff = True if opt.scaling!=0 else False), 
         RandomTranslate(opt.translation)])
         img, bboxes = transforms(img, bboxes)
 
@@ -61,8 +61,8 @@ if __name__ == '__main__':
     parser.add_argument('--saturation', default = 0, type=int, help='saturation transform(0~255)')
     parser.add_argument('--brightness', default = 0, type=int, help='brightness transform(0~100)')
     parser.add_argument('--rotation', default = 0, type=int, help='rotation 0 : false, 1 : true(0,90,180,270)')
-    parser.add_argument('--scaling', default = 0, type=float, help='scaling')
-    parser.add_argument('--translation', default = 0, type=float, help='translation')
+    parser.add_argument('--scaling', default = 0.0, type=float, help='scaling')
+    parser.add_argument('--translation', default = 0.01, type=float, help='translation')
     opt = parser.parse_args()
 
     augmentation(opt)

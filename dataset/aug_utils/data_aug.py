@@ -428,7 +428,7 @@ class RandomRotate(object):
         
     """
 
-    def __init__(self, angle = 10):
+    def __init__(self, angle = 0):
         self.angle = angle
         
         if type(self.angle) == tuple:
@@ -440,7 +440,9 @@ class RandomRotate(object):
     def __call__(self, img, bboxes):
         
         # angle = random.uniform(*self.angle)
-        angle = random.choices([0,90,180,270],[0.25,0.25,0.25,0.25])[0]
+        angle = 0
+        if self.angle[0] :
+            angle = random.choices([0,90,180,270],[0.25,0.25,0.25,0.25])[0]
     
         w,h = img.shape[1], img.shape[0]
         cx, cy = w//2, h//2
