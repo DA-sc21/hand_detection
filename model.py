@@ -2,8 +2,10 @@ import cv2
 from PIL import Image
 import numpy as np
 import os
+#import tensorflow as tf
 
 from modules.yolo import YOLO
+from modules import ssd_utils as ssd_utils
 import mediapipe as mp
 
 class Model():
@@ -11,15 +13,15 @@ class Model():
     def __init__(self, opt):
         self.opt = opt
 
-        if opt.ObjectDetection == 'ssdMobileNetv1':
-            #self.ObjectDetection = ssdMobileNetv1()
-            pass
-        elif opt.ObjectDetection == 'ssdMobileNetv2':
+        if opt.ObjectDetection == 'ssdmobilenetv1':
+            MODEL_NAME = 'modules/models/ssd_mobilenetv1'
+            self.ObjectDetection, self.sess = ssd_utils.load_inference_graph(opt.ObjectDetection)
+        elif opt.ObjectDetection == 'ssdmobilenetv2':
             pass
         elif opt.ObjectDetection == 'yolov4-tiny':
-            self.ObjectDetection = YOLO("modules/models/yolov4-tiny-custom.cfg", "modules/models/yolov4-tiny-custom_best.weights", ["hand"])
+            self.ObjectDetection = YOLO("modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "modules/models/yolov4-tiny/yolov4-tiny-custom_best.weights", ["hand"])
         elif opt.ObjectDetection == 'yolov3-tiny':
-            self.ObjectDetection = YOLO("modules/models/yolov3-tiny-prn-custom.cfg", "modules/models/yolov3-tiny-prn-custom.weights", ["hand"])
+            self.ObjectDetection = YOLO("modules/models/yolov3-tiny/yolov3-tiny-prn-custom.cfg", "modules/models/yolov3-tiny/yolov3-tiny-prn-custom.weights", ["hand"])
         elif opt.ObjectDetection == 'mediapipe':
             self.ObjectDetection = mp.solutions.hands
         else :
@@ -71,8 +73,26 @@ class Model():
             print("AVG Confidence: %s Count: %s" % (round(conf_sum / detection_count, 2), detection_count))
             cv2.destroyAllWindows()
 
-        elif model == 'ssdMobileNetv1' or model == 'ssdMobileNetv1':
-            pass
+        elif model == 'ssdmobilenetv1' or model == 'ssdmobilenetv2':
+            for file in files:
+                print(file)
+                mat = cv2.imread(file)
+                num_hands_detect = 4
+
+                im_height , im_width = mat.shape[:2]
+                boxes, scores = ssd_utils.detect_objects(mat,
+                                                      self.ObjectDetection, self.sess)
+
+                # draw bounding boxes on frame
+                ssd_utils.draw_box_on_image(num_hands_detect, 0.2,
+                                         scores, boxes, im_width, im_height,
+                                         mat)
+                cv2.imshow('Single-Threaded Detection',
+                       cv2.cvtColor(mat, cv2.COLOR_RGB2BGR))
+                cv2.waitKey(0)
+                print(len(boxes))
+                
+            cv2.destroyAllWindows()
 
         elif model == 'mediapipe':
             for file in files:
@@ -87,6 +107,3 @@ class Model():
                     results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
                     print(results.multi_handedness)
                     print("hand_num : ", len(results.multi_handedness))
-                    
-
-    
