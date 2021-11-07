@@ -1,0 +1,24 @@
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/ 
+*.py[cod] 
+*.pyc
+*$py.class
+
+images/
+videos/
+output/
+ssd_annotations/
+yolo_annotations/
+venv/
+
+*.mp4
+*.mov
+*.mat
+
+checkpoint
+*.pb
+*.index
+*.meta
+*.weights
