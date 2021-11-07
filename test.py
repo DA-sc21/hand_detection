@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # parser.add_argument('--batch_size', type=int, default=192, help='input batch size')
     # parser.add_argument('--saved_model', required=True, help="path to saved_model to evaluation")
     """ Model Architecture """
-    parser.add_argument('--ObjectDetection', type=str, required=True, help='ObjectDetection stage. ssdMobileNetv1|ssdMobileNetv2 \
+    parser.add_argument('--ObjectDetection', type=str, required=True, help='ObjectDetection stage. ssdmobilenetv1|ssdmobilenetv2 \
     yolov3-tiny|yolov4-tiny|mediapipe')
     
     parser.add_argument('--input_channel', type=int, default=1, help='the number of input channel of Feature extractor')

@@ -13,7 +13,6 @@ class YOLO:
 
         self.labels = labels
 
-
         try:
             self.net = cv2.dnn.readNetFromDarknet(config, model)
         except:
