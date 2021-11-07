@@ -14,7 +14,7 @@ def test(opt):
     
     files = sorted(glob.glob("%s/*.jpg" % opt.eval_data))
 
-    model.forward(opt.ObjectDetection,files,False)
+    model.forward(opt.ObjectDetection,files,True)
 
 
 if __name__ == '__main__':

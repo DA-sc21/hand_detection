@@ -123,16 +123,14 @@
   <image_path>, <width>, <height>, <class>, <min_x>, <min_y>, <max_x>, <max_y>
   ```
  
-2. test
+2. test or demo
 ```bash
 python test.py --eval_data dataset/test --ObjectDetection yolov4-tiny 
+python demo.py --eval_data dataset/test --ObjectDetection yolov4-tiny 
 ```
   모듈로 embeded 함 
-  ssd_mobilenetv1
-  ssd_mobilenetv2
-  yolov4-tiny
-  yolov3-tiny
-  google mediapipe palm detection
+  test : ssdmobilenetv1 | ssd_mobilenetv2 | yolov4-tiny | yolov3-tiny
+  demo : ssdmobilenetv1 | ssd_mobilenetv2 | yolov4-tiny | yolov3-tiny | google mediapipe palm detection
   결과는 test/{model_name}에 저장되도록 한다.
 
 3. mAP 측정
