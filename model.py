@@ -1,8 +1,10 @@
 import cv2
-import argparse
-import glob
+from PIL import Image
+import numpy as np
 import os
+
 from modules.yolo import YOLO
+import mediapipe as mp
 
 class Model():
 
@@ -19,7 +21,7 @@ class Model():
         elif opt.ObjectDetection == 'yolov3-tiny':
             self.ObjectDetection = YOLO("modules/models/yolov3-tiny-prn-custom.cfg", "modules/models/yolov3-tiny-prn-custom.weights", ["hand"])
         elif opt.ObjectDetection == 'mediapipe':
-            pass
+            self.ObjectDetection = mp.solutions.hands
         else :
             raise Exception('No ObjectDetection module specified')
     
@@ -71,6 +73,20 @@ class Model():
 
         elif model == 'ssdMobileNetv1' or model == 'ssdMobileNetv1':
             pass
+
         elif model == 'mediapipe':
-            pass
+            for file in files:
+                hand_img = Image.open(file)
+
+                with self.ObjectDetection.Hands(
+                      static_image_mode=True,
+                      max_num_hands=4,
+                      min_detection_confidence=0.3) as hands:
+                    image = cv2.cvtColor(np.array(hand_img), cv2.COLOR_RGB2BGR)
+                    # Convert the BGR image to RGB before processing.
+                    results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                    print(results.multi_handedness)
+                    print("hand_num : ", len(results.multi_handedness))
+                    
+
     
