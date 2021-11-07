@@ -17,7 +17,8 @@ class Model():
             MODEL_NAME = 'modules/models/ssd_mobilenetv1'
             self.ObjectDetection, self.sess = ssd_utils.load_inference_graph(opt.ObjectDetection)
         elif opt.ObjectDetection == 'ssdmobilenetv2':
-            pass
+            MODEL_NAME = 'modules/models/ssd_mobilenetv2'
+            self.ObjectDetection, self.sess = ssd_utils.load_inference_graph(opt.ObjectDetection)
         elif opt.ObjectDetection == 'yolov4-tiny':
             self.ObjectDetection = YOLO("modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "modules/models/yolov4-tiny/yolov4-tiny-custom_best.weights", ["hand"])
         elif opt.ObjectDetection == 'yolov3-tiny':
@@ -91,7 +92,7 @@ class Model():
                        cv2.cvtColor(mat, cv2.COLOR_RGB2BGR))
                 cv2.waitKey(0)
                 print(len(boxes))
-                
+
             cv2.destroyAllWindows()
 
         elif model == 'mediapipe':
