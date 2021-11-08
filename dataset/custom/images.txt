@@ -1,0 +1,5 @@
+images/view_front_person_1_action_typing_noface_03560.xml
+images/view_front_person_1_action_typing_noface_03561.xml
+images/view_front_person_1_action_typing_noface_03563.xml
+images/view_front_person_1_action_typing_noface_03562.xml
+images/view_front_person_1_action_typing_noface_03564.xml
