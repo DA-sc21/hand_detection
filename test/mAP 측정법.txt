@@ -1,4 +1,0 @@
-mAP 측정법
-$ python evaluate_mAP.py --model ssd_mobilenetv1
-
-저장되는 곳 : test/output/{model_name}/에 저장된다!!

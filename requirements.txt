@@ -1,8 +1,0 @@
-scipy
-numpy
-opencv-python
-opencv-contrib-python
-matplotlib
-mediapipe
-tensorflow==1.15
-cython

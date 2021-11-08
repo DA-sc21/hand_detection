@@ -27,3 +27,4 @@ checkpoint
 *.meta
 *.data*
 *.weights
+events.out.tfevents.*
