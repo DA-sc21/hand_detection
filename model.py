@@ -2,7 +2,7 @@ import cv2
 from PIL import Image
 import numpy as np
 import os
-#import tensorflow as tf
+import tensorflow as tf
 
 from modules.yolo import YOLO
 from modules import ssd_utils as ssd_utils
@@ -14,10 +14,8 @@ class Model():
         self.opt = opt
 
         if opt.ObjectDetection == 'ssdmobilenetv1':
-            MODEL_NAME = 'modules/models/ssd_mobilenetv1'
             self.ObjectDetection, self.sess = ssd_utils.load_inference_graph(opt.ObjectDetection)
         elif opt.ObjectDetection == 'ssdmobilenetv2':
-            MODEL_NAME = 'modules/models/ssd_mobilenetv2'
             self.ObjectDetection, self.sess = ssd_utils.load_inference_graph(opt.ObjectDetection)
         elif opt.ObjectDetection == 'yolov4-tiny':
             self.ObjectDetection = YOLO("modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "modules/models/yolov4-tiny/yolov4-tiny-custom_best.weights", ["hand"])
