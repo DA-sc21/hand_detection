@@ -4,17 +4,18 @@ import os
 import cv2
 
 from model import Model
-
+import evaluate_mAP
 
 def test(opt):
     labels = {'hand' : 0}
 
     model = Model(opt)
     print('model input parameters : ', opt.ObjectDetection)
-    
+
     files = sorted(glob.glob("%s/*.jpg" % opt.eval_data))
 
-    model.forward(opt.ObjectDetection,files,False)
+    results = model.forward(opt.ObjectDetection,files,False)
+    evaluate_mAP.evaluate(opt.ObjectDetection,'test',results)
 
 
 if __name__ == '__main__':

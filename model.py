@@ -18,9 +18,9 @@ class Model():
         elif opt.ObjectDetection == 'ssdmobilenetv2':
             self.ObjectDetection, self.sess = ssd_utils.load_inference_graph(opt.ObjectDetection)
         elif opt.ObjectDetection == 'yolov4-tiny':
-            self.ObjectDetection = YOLO("modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "modules/models/yolov4-tiny/yolov4-tiny-custom_best.weights", ["hand"])
+            self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_best.weights", ["hand"])
         elif opt.ObjectDetection == 'yolov3-tiny':
-            self.ObjectDetection = YOLO("modules/models/yolov3-tiny/yolov3-tiny-prn-custom.cfg", "modules/models/yolov3-tiny/yolov3-tiny-prn-custom.weights", ["hand"])
+            self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/yolov3-tiny-prn-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/yolov3-tiny-prn-custom.weights", ["hand"])
         elif opt.ObjectDetection == 'mediapipe':
             self.ObjectDetection = mp.solutions
         else :
@@ -124,15 +124,21 @@ class Model():
             if model == 'yolov4-tiny' or model == 'yolov3-tiny':
                 conf_sum = 0
                 detection_count = 0
+
+                detection_result = [] #file_path(확장자 제거),'hand',confidence, x_min, y_min, x_max, y_max
                 for file in files:
-                    print(file)
+                    file_path = file.split("/")[-1][:-4]
                     mat = cv2.imread(file)
                     width, height, inference_time, results = self.ObjectDetection.inference(mat)
-                    print(results)
+                    for result in results:
+                        id, name, conf, x, y, w, h = result
+                        detection_result.append([file_path, name, str(conf),str(x),str(y),str(x+w),str(y+h)])
                     print("%s in %s seconds: %s classes found!" %
                   (os.path.basename(file), round(inference_time, 2), len(results)))
+                # print(detection_result)
+                # print("AVG Confidence: %s Count: %s" % (round(conf_sum / detection_count, 2), detection_count))
+                return detection_result
 
-                print("AVG Confidence: %s Count: %s" % (round(conf_sum / detection_count, 2), detection_count))
 
             elif model == 'ssdmobilenetv1' or model == 'ssdmobilenetv2':
                 for file in files:
