@@ -394,41 +394,41 @@ def detection_results(op,results, gt_classes):
     global OUTPUT_FILE_PATH,GT_PATH,DR_PATH, DR_FILES_LIST
     DR_FILES_LIST = glob.glob(DR_PATH + '/*.txt')
     DR_FILES_LIST.sort()
-    if op == 'main':
-        for class_index, class_name in enumerate(gt_classes):
-            bounding_boxes = []
-            for txt_file in DR_FILES_LIST:
-                #print(txt_file)
-                # the first time it checks if all the corresponding ground-truth files exist
-                file_id = txt_file.split(".txt",1)[0]
-                print(file_id)
-                file_id = os.path.basename(os.path.normpath(file_id))
-                temp_path = os.path.join(GT_PATH, (file_id + ".txt"))
-                if class_index == 0:
-                    if not os.path.exists(temp_path):
-                        error_msg = "Error. File not found: {}\n".format(temp_path)
-                        error_msg += "(You can avoid this error message by running extra/intersect-gt-and-dr.py)"
-                        error(error_msg)
-                lines = file_lines_to_list(txt_file)
-                for line in lines:
-                    try:
-                        tmp_class_name, confidence, left, top, right, bottom = line.split()
-                    except ValueError:
-                        error_msg = "Error: File " + txt_file + " in the wrong format.\n"
-                        error_msg += " Expected: <class_name> <confidence> <left> <top> <right> <bottom>\n"
-                        error_msg += " Received: " + line
-                        error(error_msg)
-                    if tmp_class_name == class_name:
-                        #print("match")
-                        bbox = left + " " + top + " " + right + " " +bottom
-                        bounding_boxes.append({"confidence":confidence, "file_id":file_id, "bbox":bbox})
-                        #print(bounding_boxes)
-            # sort detection-results by decreasing confidence
-            bounding_boxes.sort(key=lambda x:float(x['confidence']), reverse=True)
-            with open(TEMP_FILES_PATH + "/" + class_name + "_dr.json", 'w') as outfile:
-                json.dump(bounding_boxes, outfile)
+    # if op == 'main':
+    #     for class_index, class_name in enumerate(gt_classes):
+    #         bounding_boxes = []
+    #         for txt_file in DR_FILES_LIST:
+    #             #print(txt_file)
+    #             # the first time it checks if all the corresponding ground-truth files exist
+    #             file_id = txt_file.split(".txt",1)[0]
+    #             print(file_id)
+    #             file_id = os.path.basename(os.path.normpath(file_id))
+    #             temp_path = os.path.join(GT_PATH, (file_id + ".txt"))
+    #             if class_index == 0:
+    #                 if not os.path.exists(temp_path):
+    #                     error_msg = "Error. File not found: {}\n".format(temp_path)
+    #                     error_msg += "(You can avoid this error message by running extra/intersect-gt-and-dr.py)"
+    #                     error(error_msg)
+    #             lines = file_lines_to_list(txt_file)
+    #             for line in lines:
+    #                 try:
+    #                     tmp_class_name, confidence, left, top, right, bottom = line.split()
+    #                 except ValueError:
+    #                     error_msg = "Error: File " + txt_file + " in the wrong format.\n"
+    #                     error_msg += " Expected: <class_name> <confidence> <left> <top> <right> <bottom>\n"
+    #                     error_msg += " Received: " + line
+    #                     error(error_msg)
+    #                 if tmp_class_name == class_name:
+    #                     #print("match")
+    #                     bbox = left + " " + top + " " + right + " " +bottom
+    #                     bounding_boxes.append({"confidence":confidence, "file_id":file_id, "bbox":bbox})
+    #                     #print(bounding_boxes)
+    #         # sort detection-results by decreasing confidence
+    #         bounding_boxes.sort(key=lambda x:float(x['confidence']), reverse=True)
+    #         with open(TEMP_FILES_PATH + "/" + class_name + "_dr.json", 'w') as outfile:
+    #             json.dump(bounding_boxes, outfile)
 
-    else :
+    if op=='test' :
         for class_index, class_name in enumerate(gt_classes):
             bounding_boxes = []
             for result in results :
@@ -609,22 +609,22 @@ def calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_c
     """
     # iterate through all the files
     det_counter_per_class = {}
-    if op == 'main':
-        for txt_file in DR_FILES_LIST:
-            # get lines to list
-            lines_list = file_lines_to_list(txt_file)
-            for line in lines_list:
-                class_name = line.split()[0]
-                # check if class is in the ignore list, if yes skip
-                # count that object
-                if class_name in det_counter_per_class:
-                    det_counter_per_class[class_name] += 1
-                else:
-                    # if class didn't exist yet
-                    det_counter_per_class[class_name] = 1
-        #print(det_counter_per_class)
-        dr_classes = list(det_counter_per_class.keys())
-    else :
+    # if op == 'main':
+    #     for txt_file in DR_FILES_LIST:
+    #         # get lines to list
+    #         lines_list = file_lines_to_list(txt_file)
+    #         for line in lines_list:
+    #             class_name = line.split()[0]
+    #             # check if class is in the ignore list, if yes skip
+    #             # count that object
+    #             if class_name in det_counter_per_class:
+    #                 det_counter_per_class[class_name] += 1
+    #             else:
+    #                 # if class didn't exist yet
+    #                 det_counter_per_class[class_name] = 1
+    #     #print(det_counter_per_class)
+    #     dr_classes = list(det_counter_per_class.keys())
+    if op=='test':
         for result in results :
             class_name = result[1]
             if class_name in det_counter_per_class:
@@ -759,23 +759,23 @@ def calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_c
             plot_color,
             ""
             )
+    return mAP
 
-def evaluate(model,op,results):
+def evaluate(model,op,results,gt_path):
     global OUTPUT_FILES_PATH,GT_PATH,DR_PATH
-    OUTPUT_FILES_PATH = "test_result/output/"+model
+    OUTPUT_FILES_PATH = "test_result/"+model
     # 추후 custom으로 바꾸기 
-    GT_PATH = 'dataset/test'
+    GT_PATH = gt_path
     DR_PATH = os.path.join(os.getcwd(), model)
     create_directory()
     ground_truth_files_list, gt_counter_per_class, counter_images_per_class, gt_classes, n_classes = get_gt()
-    if op == 'main':
-        detection_results(op,[], gt_classes)
-    else :
+    # if op == 'main':
+    #     detection_results(op,[], gt_classes)
+    if op=='test' :
         detection_results(op,results,gt_classes)
 
-    calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_classes,ground_truth_files_list, results)
-    
-
+    mAP = calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_classes,ground_truth_files_list, results)
+    return mAP
 
 
 if __name__ == "__main__":
@@ -785,4 +785,4 @@ if __name__ == "__main__":
     parser.add_argument('--model', type=str,help="model name")
     args = parser.parse_args()
 
-    evaluate(args.model,'main',None)
+    evaluate(args.model,'main',None,'dataset/test')

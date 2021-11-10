@@ -1,0 +1,14 @@
+# AP and precision/recall per class
+0.32% = hand AP 
+ Precision: ['1.00', '1.00', '1.00', '1.00']
+ Recall :['0.00', '0.00', '0.00', '0.00']
+
+
+# mAP of all classes
+mAP = 0.32%
+
+# Number of ground-truth objects per class
+hand: 1254
+
+# Number of detected objects per class
+hand: 4 (tp:4, fp:0)

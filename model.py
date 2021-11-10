@@ -3,6 +3,7 @@ from PIL import Image
 import numpy as np
 import os
 import tensorflow as tf
+import time
 
 from modules.yolo import YOLO
 from modules import ssd_utils as ssd_utils
@@ -126,10 +127,12 @@ class Model():
                 detection_count = 0
 
                 detection_result = [] #file_path(확장자 제거),'hand',confidence, x_min, y_min, x_max, y_max
+                mean_inference_time = 0
                 for file in files:
                     file_path = file.split("/")[-1][:-4]
                     mat = cv2.imread(file)
                     width, height, inference_time, results = self.ObjectDetection.inference(mat)
+                    mean_inference_time += inference_time
                     for result in results:
                         id, name, conf, x, y, w, h = result
                         detection_result.append([file_path, name, str(conf),str(x),str(y),str(x+w),str(y+h)])
@@ -137,20 +140,32 @@ class Model():
                   (os.path.basename(file), round(inference_time, 2), len(results)))
                 # print(detection_result)
                 # print("AVG Confidence: %s Count: %s" % (round(conf_sum / detection_count, 2), detection_count))
-                return detection_result
-
+                mean_inference_time /= len(files)
+                return detection_result, mean_inference_time
 
             elif model == 'ssdmobilenetv1' or model == 'ssdmobilenetv2':
+                mean_inference_time = 0
                 for file in files:
                     mat = cv2.imread(file)
-                    num_hands_detect = 4
+                    file_path = file.split("/")[-1][:-4]
                     im_height , im_width = mat.shape[:2]
-                    boxes, scores = ssd_utils.detect_objects(mat,
+                    boxes, scores, inference_time = ssd_utils.detect_objects(mat,
                                                       self.ObjectDetection, self.sess)
+                    mean_inference_time += inference_time
+                    detection_result = [] #file_path(확장자 제거),'hand',confidence, x_min, y_min, x_max, y_max
+                    score_thresh = 0.1
+                    for i in range(len(boxes)):
+                        if (scores[i] > score_thresh):
+                            detection_result.append([file_path, 'hand', str(scores[i]),str(boxes[i][1] * im_width),
+                            str(boxes[i][0] * im_height),str(boxes[i][3] * im_width),str(boxes[i][2] * im_height)])
 
-                    print(boxes)
+                    #print(detection_result)
+
+                mean_inference_time /= len(files)
+                return detection_result, mean_inference_time
 
             elif model == 'mediapipe':
+                mean_inference_time = 0
                 for file in files:
                     hand_img = Image.open(file)
 
@@ -160,8 +175,15 @@ class Model():
                           min_detection_confidence=0.3) as hands:
                         image = cv2.cvtColor(np.array(hand_img), cv2.COLOR_RGB2BGR)
                         # Convert the BGR image to RGB before processing.
+                        start = time.time()
                         results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                        end = time.time()
+                        mean_inference_time += (end-start)
                         print(results.multi_handedness)
                         print("hand_num : ", len(results.multi_handedness))
+
+                mean_inference_time /= len(files)
+
+                return [],mean_inference_time
 
         
