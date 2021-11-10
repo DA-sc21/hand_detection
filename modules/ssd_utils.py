@@ -8,7 +8,7 @@ import os
 from threading import Thread
 import cv2
 from collections import defaultdict
-
+import time
 
 detection_graph = tf.Graph()
 sys.path.append("..")
@@ -72,9 +72,12 @@ def detect_objects(image_np, detection_graph, sess):
         'num_detections:0')
 
     image_np_expanded = np.expand_dims(image_np, axis=0)
-
+    start = time.time()
     (boxes, scores, classes, num) = sess.run(
         [detection_boxes, detection_scores,
             detection_classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
-    return np.squeeze(boxes), np.squeeze(scores)
+    end = time.time()
+
+    inference_time = end-start
+    return np.squeeze(boxes), np.squeeze(scores), inference_time
