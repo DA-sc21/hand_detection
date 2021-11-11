@@ -77,19 +77,20 @@ class Model():
             elif model == 'ssdmobilenetv1' or model == 'ssdmobilenetv2':
                 for file in files:
                     print(file)
-                    mat = cv2.imread(file)
+                    img = Image.open(file)
+                    image_np = np.array(img)
                     num_hands_detect = 4
 
-                    im_height , im_width = mat.shape[:2]
-                    boxes, scores = ssd_utils.detect_objects(mat,
+                    im_width, im_height = img.size
+                    boxes, scores,inference_time = ssd_utils.detect_objects(image_np,
                                                       self.ObjectDetection, self.sess)
 
                     # draw bounding boxes on frame
-                    ssd_utils.draw_box_on_image(num_hands_detect, 0.2,
+                    ssd_utils.draw_box_on_image(num_hands_detect, 0.3,
                                              scores, boxes, im_width, im_height,
-                                             mat)
+                                             image_np)
                     cv2.imshow(model,
-                           cv2.cvtColor(mat, cv2.COLOR_RGB2BGR))
+                           cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
                     cv2.waitKey(0)
                     print(len(boxes))
 
@@ -145,19 +146,26 @@ class Model():
 
             elif model == 'ssdmobilenetv1' or model == 'ssdmobilenetv2':
                 mean_inference_time = 0
+                detection_result = [] #file_path(확장자 제거),'hand',confidence, x_min, y_min, x_max, y_max
                 for file in files:
-                    mat = cv2.imread(file)
-                    file_path = file.split("/")[-1][:-4]
-                    im_height , im_width = mat.shape[:2]
-                    boxes, scores, inference_time = ssd_utils.detect_objects(mat,
+                    img = Image.open(file)
+                    image_np = np.array(img)
+                    num_hands_detect = 4
+
+                    im_width, im_height = img.size
+                    boxes, scores,inference_time = ssd_utils.detect_objects(image_np,
                                                       self.ObjectDetection, self.sess)
+
+
+                    file_path = file.split("/")[-1][:-4]
+
                     mean_inference_time += inference_time
-                    detection_result = [] #file_path(확장자 제거),'hand',confidence, x_min, y_min, x_max, y_max
-                    score_thresh = 0.1
+                    score_thresh = 0.3
                     for i in range(len(boxes)):
-                        if (scores[i] > score_thresh):
-                            detection_result.append([file_path, 'hand', str(scores[i]),str(boxes[i][1] * im_width),
-                            str(boxes[i][0] * im_height),str(boxes[i][3] * im_width),str(boxes[i][2] * im_height)])
+                        if scores[i] > score_thresh:
+                            left, right, top, bottom = boxes[i][1] * im_width, boxes[i][3] * im_width, boxes[i][0] * im_height, boxes[i][2] * im_height
+                            detection_result.append([file_path, 'hand', str(scores[i]),str(left),
+                            str(top),str(right),str(bottom)])
 
                     #print(detection_result)
 
