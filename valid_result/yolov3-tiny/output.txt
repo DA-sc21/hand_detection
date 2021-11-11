@@ -12,3 +12,4 @@ hand: 1254
 
 # Number of detected objects per class
 hand: 1150 (tp:1116, fp:34)
+In case of erroneous detection : 0
