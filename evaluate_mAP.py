@@ -431,6 +431,7 @@ def detection_results(op,results, gt_classes):
     if op=='test' :
         for class_index, class_name in enumerate(gt_classes):
             bounding_boxes = []
+
             for result in results :
                 try:
                     file_id,tmp_class_name, confidence, left, top, right, bottom = result
@@ -454,6 +455,7 @@ def detection_results(op,results, gt_classes):
 def calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_classes,ground_truth_files_list,results):
     global OUTPUT_FILES_PATH,GT_PATH,DR_PATH,DR_FILES_LIST
     sum_AP = 0.0
+    err_num = 0
     ap_dictionary = {}
     lamr_dictionary = {}
     # open file to store the output
@@ -481,7 +483,11 @@ def calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_c
                 # assign detection-results to ground truth object if any
                 # open ground-truth with that file_id
                 gt_file = TEMP_FILES_PATH + "/" + file_id + "_ground_truth.json"
-                ground_truth_data = json.load(open(gt_file))
+                if os.path.isfile(gt_file) :
+                    ground_truth_data = json.load(open(gt_file))
+                else :
+                    err_num += len([float(x) for x in detection["bbox"].split()])
+                    continue
                 ovmax = -1
                 gt_match = -1
                 # load detected object bounding-box
@@ -714,6 +720,7 @@ def calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_c
             text = class_name + ": " + str(n_det)
             text += " (tp:" + str(count_true_positives[class_name]) + ""
             text += ", fp:" + str(n_det - count_true_positives[class_name]) + ")\n"
+            text += "In case of erroneous detection : " + str(err_num) + "\n"
             output_file.write(text)
 
     """
