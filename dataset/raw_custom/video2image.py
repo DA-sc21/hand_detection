@@ -4,6 +4,7 @@ import glob
 
 def video2image(opt):
     video_paths = glob.glob(opt.video_dir+"/*.mov")
+    video_paths += glob.glob(opt.video_dir+"/*.mp4")
     print(video_paths)
     # video_paths = ['/Users/yejoonko/git/Project/Capstone/hand_detection/dataset/raw_custom/videos/view_front_person_1_writing.mov']
     count = int(opt.start_num)

@@ -1,11 +1,11 @@
 # hand_detection
 
 ## analysis result
-### test mAP & inference time & memory (custom test data())
+
 #### test mAP & inference time & memory (추후 test set 80->400 images 될 예정)
 <img src="imgs/test_result.png" width="100%">
 
-### validation mAP & inference time & memory (egohand evaluation data(400 images))
+#### validation mAP & inference time & memory (egohand evaluation data(400 images))
 <img src="imgs/validation_result.png" width="100%">
 
 시간 관계상 open source에서 제공되는 ssdmobilenetv1은 모델 구조와 모델 가중치를 포함하는 .pb 를 그대로 사용하고, ssdmobilenetv2, yolov3-tiny-prn, yolov4-tiny에 대해서는 데이터를 수정하고, model config를 수정하여 직접 학습하였다.
@@ -278,9 +278,9 @@ $ python evaluate_mAP.py --model {model_name}
 
 #### reference
 * dataset
-
+  - http://vision.soic.indiana.edu/projects/egohands/
 * data labeling
-
+  - https://github.com/tzutalin/labelImg
 * data augmentation
   - https://github.com/Paperspace/DataAugmentationForObjectDetection  
 

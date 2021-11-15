@@ -8,7 +8,9 @@ __pycache__/
 
 images/
 egohands/
-videos/
+hand_labels/
+video*/
+temp/
 output/
 dataset/test
 ssd_annotations/
