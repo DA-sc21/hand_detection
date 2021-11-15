@@ -13,6 +13,7 @@ output/
 ssd_annotations/
 yolo_annotations/
 models-master/
+validation/
 venv/
 
 *.mp4

@@ -1,6 +1,19 @@
 # hand_detection
 
 ## analysis result
+### test mAP & inference time & memory (custom test data())
+#### test mAP
+
+#### test loss
+
+### validation mAP & inference time & memory (egohand evaluation data(400 images))
+
+시간 관계상 open source에서 제공되는 ssdmobilenetv1은 모델 구조와 모델 가중치를 포함하는 .pb 를 그대로 사용하고, ssdmobilenetv2, yolov3-tiny-prn, yolov4-tiny에 대해서는 데이터를 수정하고, model config를 수정하여 직접 학습하였다.
+ssdmobilenetv1은 무언가 훈련이 잘못되어 있는 듯한 모습을 보였다.
+
+
+
+
 
 ### structure
 ```
@@ -122,6 +135,14 @@
   .csv -> .tfrecord, .pbtxt 생성
   <image_path>, <width>, <height>, <class>, <min_x>, <min_y>, <max_x>, <max_y>
   ```
+
+cf ) make validation set or test set for calculate mAP (.csv -> .txt)
+<'class_name'> <'x_min'> <'y_min'> <'x_max'> <'y_max'>
+```bash
+$ cd dataset/
+$ python python make_validation_annotation.py --valid_path {validation or test csv path}
+```
+
  
 2. test or demo
 ```bash

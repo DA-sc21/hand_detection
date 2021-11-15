@@ -8,7 +8,7 @@ import os
 from threading import Thread
 import cv2
 from collections import defaultdict
-
+import time
 
 detection_graph = tf.Graph()
 sys.path.append("..")
@@ -23,6 +23,14 @@ NUM_CLASSES = 1
 # Load a frozen infrerence graph into memory
 def load_inference_graph(modelname):
     PATH_TO_CKPT = PATH_MODEL + modelname + '/frozen_inference_graph.pb'
+    # PATH_TO_LABELS = os.path.join(modelname, 'hand_label_map.pbtxt')
+
+    # # load label map
+    # label_map = load_labelmap(PATH_TO_LABELS)
+    # categories = convert_label_map_to_categories(
+    # label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
+    # category_index = create_category_index(categories)
+
     # load frozen tensorflow model into memory
     print("> ====== loading HAND frozen graph into memory")
     detection_graph = tf.Graph()
@@ -34,6 +42,7 @@ def load_inference_graph(modelname):
             tf.import_graph_def(od_graph_def, name='')
         sess = tf.Session(graph=detection_graph)
     print(">  ====== Hand Inference graph loaded.")
+
     return detection_graph, sess
 
 
@@ -72,9 +81,12 @@ def detect_objects(image_np, detection_graph, sess):
         'num_detections:0')
 
     image_np_expanded = np.expand_dims(image_np, axis=0)
-
+    start = time.time()
     (boxes, scores, classes, num) = sess.run(
         [detection_boxes, detection_scores,
             detection_classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
-    return np.squeeze(boxes), np.squeeze(scores)
+    end = time.time()
+
+    inference_time = end-start
+    return np.squeeze(boxes), np.squeeze(scores), inference_time

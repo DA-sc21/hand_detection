@@ -4,17 +4,23 @@ import os
 import cv2
 
 from model import Model
-
+import evaluate_mAP
 
 def test(opt):
     labels = {'hand' : 0}
 
     model = Model(opt)
     print('model input parameters : ', opt.ObjectDetection)
-    
+
     files = sorted(glob.glob("%s/*.jpg" % opt.eval_data))
 
-    model.forward(opt.ObjectDetection,files,False)
+    results,mean_inference_time = model.forward(opt.ObjectDetection,files,False)
+    if opt.ObjectDetection == 'mediapipe':
+        print("{model} average Inference time {time}".format(model=opt.ObjectDetection,time=mean_inference_time))
+    else :
+        precision=evaluate_mAP.evaluate(opt.ObjectDetection,'test',results,opt.eval_data)
+        print("{model} average Inference time {time}".format(model=opt.ObjectDetection,time=mean_inference_time))
+        print("{model} average Precision {precision}".format(model=opt.ObjectDetection,precision=precision))
 
 
 if __name__ == '__main__':
