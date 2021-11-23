@@ -2,8 +2,14 @@
 
 ## analysis result
 
-#### test mAP & inference time & memory (추후 test set 80->400 images 될 예정)
-<img src="imgs/test_result.png" width="100%">
+#### test mAP & inference time & memory 
+##### front view
+(1124 수요일에 라벨링하여 test set 80->100 images 될 예정 --> 추후 200까지 늘릴 예정)
+<img src="imgs/front_view_result_80.png" width="100%">
+
+##### side view 
+(1124 수요일에 라벨링하여 test set 240->300 images 될 예정)
+<img src="imgs/side_view_result_240.png" width="100%">
 
 #### validation mAP & inference time & memory (egohand evaluation data(400 images))
 <img src="imgs/validation_result.png" width="100%">
