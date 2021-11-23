@@ -17,9 +17,12 @@ ssd_annotations/
 yolo_annotations/
 test_annotations/
 voc_annotations/
+front_view/
+side_view/
 models-master/
 validation/
 venv/
+CMUdataset/
 
 *.mp4
 *.mov
