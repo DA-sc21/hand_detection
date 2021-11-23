@@ -445,6 +445,7 @@ def detection_results(op,results, gt_classes):
                     bounding_boxes.append({"confidence":confidence, "file_id":file_id, "bbox":bbox})
 
             bounding_boxes.sort(key=lambda x:float(x['confidence']), reverse=True)
+            # print(bounding_boxes)
             with open(TEMP_FILES_PATH + "/" + class_name + "_dr.json", 'w') as outfile:
                 json.dump(bounding_boxes, outfile)
 
@@ -470,6 +471,7 @@ def calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_c
             """
             dr_file = TEMP_FILES_PATH + "/" + class_name + "_dr.json"
             dr_data = json.load(open(dr_file))
+            # print(dr_data)
 
             """
              Assign detection-results to ground-truth objects
@@ -546,10 +548,11 @@ def calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_c
                 rec[idx] = float(tp[idx]) / gt_counter_per_class[class_name]
             # print(rec)
             prec = tp[:]
-    
+
             for idx, val in enumerate(tp):
                 prec[idx] = float(tp[idx]) / (fp[idx] + tp[idx])
             # print(prec)
+
 
             ap, mrec, mprec = voc_ap(rec[:], prec[:])
             sum_AP += ap
@@ -557,6 +560,7 @@ def calculate_AP(op,gt_classes,gt_counter_per_class,counter_images_per_class,n_c
             """
              Write to output.txt
             """
+
             rounded_prec = [ '%.2f' % elem for elem in prec ]
             rounded_rec = [ '%.2f' % elem for elem in rec ]
             output_file.write(text + "\n Precision: " + str(rounded_prec) + "\n Recall :" + str(rounded_rec) + "\n\n")

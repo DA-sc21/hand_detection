@@ -14,7 +14,7 @@ detection_graph = tf.Graph()
 sys.path.append("..")
 
 # score threshold for showing bounding boxes.
-_score_thresh = 0.27
+_score_thresh = 0.5
 
 # PATH_TO_LABELS = os.path.join(MODEL_NAME, 'hand_label_map.pbtxt')
 PATH_MODEL = 'modules/models/'
