@@ -73,12 +73,42 @@ def convert_annotation_ssd(dir_path, output_path, image_path):
         b = (float(xmlbox.find('xmin').text), float(xmlbox.find('ymin').text), float(xmlbox.find('xmax').text), float(xmlbox.find('ymax').text))
 
         out_file.write(w + " " + h + " " + str(cls_id) + " " + " ".join([str(a) for a in b]) + '\n')
+    
+    out_file.close()
 
+# test mAP 용 <class_name> <left> <top> <right> <bottom>
+def convert_annotation_test(dir_path, output_path, image_path):
+    basename = os.path.basename(image_path)
+    basename_no_ext = os.path.splitext(basename)[0]
+
+    in_file = open(dir_path + '/' + basename_no_ext + '.xml' ,encoding='UTF8')
+    out_file = open(output_path + basename_no_ext + '.txt', 'w' ,encoding='UTF8')
+    tree = ET.parse(in_file)
+    root = tree.getroot()
+    size = root.find('size')
+    w = str(size.find('width').text)
+    h = str(size.find('height').text)
+
+    for obj in root.iter('object'):
+        difficult = obj.find('difficult').text
+        cls = obj.find('name').text
+        if cls not in classes or int(difficult)==1:
+            continue
+        cls_id = classes.index(cls)
+        xmlbox = obj.find('bndbox')
+        b = [xmlbox.find('xmin').text, xmlbox.find('ymin').text, xmlbox.find('xmax').text, xmlbox.find('ymax').text]
+
+        out_file.write("{class_name} {left} {top} {right} {buttom}\n".format(class_name=cls,
+                                                                            left = b[0],
+                                                                            top=b[1],
+                                                                            right=b[2],
+                                                                            buttom=b[3]))
+    out_file.close()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, help='yolo|ssd')
+    parser.add_argument('--mode', type=str, help='yolo|ssd|test')
 
     opt = parser.parse_args()   
     cwd = getcwd()
@@ -86,9 +116,11 @@ if __name__ == '__main__':
     for dir_path in dirs:
         full_dir_path = cwd + '/' + dir_path 
 
-        output_path = cwd + "/ssd_annotations/"
-        if opt.model == 'yolo':
+        output_path = cwd + "/test_annotations/"
+        if opt.mode == 'yolo':
             output_path = cwd + "/yolo_annotations/"
+        elif opt.mode=='ssd':
+            output_path = cwd + "/ssd_anotations/"
     
         if not os.path.exists(output_path):
             os.makedirs(output_path)
@@ -99,10 +131,12 @@ if __name__ == '__main__':
 
         for image_path in image_paths:
             list_file.write(image_path + '\n')
-            if opt.model == 'yolo':
+            if opt.mode == 'yolo':
                 convert_annotation_yolo(full_dir_path, output_path, image_path)
-            elif opt.model == 'ssd':
+            elif opt.mode == 'ssd':
                 convert_annotation_ssd(full_dir_path, output_path, image_path)
+            else :
+                convert_annotation_test(full_dir_path, output_path, image_path)
 
         list_file.close()
 

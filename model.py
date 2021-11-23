@@ -19,9 +19,11 @@ class Model():
         elif opt.ObjectDetection == 'ssdmobilenetv2':
             self.ObjectDetection, self.sess = ssd_utils.load_inference_graph(opt.ObjectDetection)
         elif opt.ObjectDetection == 'yolov4-tiny':
-            self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_best.weights", ["hand"])
+            self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_only_egodataset.weights", ["hand"])
+            # self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/cross-hands-yolov4-tiny.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/cross-hands-yolov4-tiny.weights", ["hand"])
         elif opt.ObjectDetection == 'yolov3-tiny':
-            self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/yolov3-tiny-prn-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/yolov3-tiny-prn-custom.weights", ["hand"])
+            self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/yolov3-tiny-prn-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/yolov3-tiny-prn-custom_only_egodataset.weights", ["hand"])
+            # self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/cross-hands-tiny-prn.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/cross-hands-tiny-prn.weights", ["hand"])
         elif opt.ObjectDetection == 'mediapipe':
             self.ObjectDetection = mp.solutions
         else :
@@ -58,7 +60,7 @@ class Model():
 
                         # draw a bounding box rectangle and label on the image
                         color = (255, 0, 255)
-                        cv2.rectangle(mat, (x, y), (x + w, y + h), color, 1)
+                        cv2.rectangle(mat, (x, y), (x + w, y + h), color, 3)
                         text = "%s (%s)" % (name, round(confidence, 2))
                         cv2.putText(mat, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX,
                         0.25, color, 1)
@@ -67,8 +69,8 @@ class Model():
 
                         # cv2.imwrite("export.jpg", mat)
 
-                    # show the output image
-                    cv2.imshow('image', mat)
+                    # show the output image\
+                    cv2.imshow('image',mat)
                     cv2.waitKey(0)
 
                 print("AVG Confidence: %s Count: %s" % (round(conf_sum / detection_count, 2), detection_count))
@@ -106,8 +108,12 @@ class Model():
                           min_detection_confidence=0.3) as hands:
                         image = cv2.cvtColor(np.array(hand_img), cv2.COLOR_RGB2BGR)
                         # Convert the BGR image to RGB before processing.
-                        results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                        print("hand_num : ", len(results.multi_handedness))
+                        try :
+                            results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                            print("hand_num : ", len(results.multi_handedness))
+                        except :
+                            print("no hand")
+                            continue
 
                         if results.multi_hand_landmarks:
                             for hand_landmarks in results.multi_hand_landmarks:
@@ -183,9 +189,15 @@ class Model():
                           min_detection_confidence=0.3) as hands:
                         image = cv2.cvtColor(np.array(hand_img), cv2.COLOR_RGB2BGR)
                         # Convert the BGR image to RGB before processing.
-                        start = time.time()
-                        results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-                        end = time.time()
+
+                        try :
+                            start = time.time()
+                            results = hands.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+                            end = time.time()
+                            print("hand_num : ", len(results.multi_handedness))
+                        except :
+                            print("no hand")
+                            continue
                         mean_inference_time += (end-start)
                         print(results.multi_handedness)
                         print("hand_num : ", len(results.multi_handedness))

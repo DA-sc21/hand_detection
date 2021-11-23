@@ -1,19 +1,19 @@
 # hand_detection
 
 ## analysis result
-### test mAP & inference time & memory (custom test data())
-#### test mAP
 
-#### test loss
+#### test mAP & inference time & memory (추후 test set 80->400 images 될 예정)
+<img src="imgs/test_result.png" width="100%">
 
-### validation mAP & inference time & memory (egohand evaluation data(400 images))
+#### validation mAP & inference time & memory (egohand evaluation data(400 images))
+<img src="imgs/validation_result.png" width="100%">
 
 시간 관계상 open source에서 제공되는 ssdmobilenetv1은 모델 구조와 모델 가중치를 포함하는 .pb 를 그대로 사용하고, ssdmobilenetv2, yolov3-tiny-prn, yolov4-tiny에 대해서는 데이터를 수정하고, model config를 수정하여 직접 학습하였다.
-ssdmobilenetv1은 무언가 훈련이 잘못되어 있는 듯한 모습을 보였다.
 
+분석 결과, validation set은 test data와 유사하기 때문에 높은 mAP를 보였지만, 자체 제작한 test 에서는 모두 성능이 떨어졌다.
+그나마 general하게 작동하는 모델이 yolov4-tiny라는 것을 확인할 수 있다. 
 
-
-
+따라서 yolov4-tiny에 다양한 각도의 hand data를 추가하여 fine tuning을 진행해보고자 한다.
 
 ### structure
 ```
@@ -23,12 +23,14 @@ ssdmobilenetv1은 무언가 훈련이 잘못되어 있는 듯한 모습을 보�
 │   ├── aug_utils
 │   │   ├── bbox_util.py
 │   │   ├── data_aug.py
+│   ├── augmentation.py
 │   ├── custom
 │   │   ├── images
 │   │   ├── ssd_annotations
-│   │   ├── temp_annotations
-│   │   ├── xml2txt.py
-│   │   └── yolo_annotations
+│   │   ├── test_annotations
+│   │   ├── yolo_annotations
+│   │   └── xml2txt.py
+│   ├── custom_augmentation.sh
 │   ├── egohand
 │   │   ├── egohands_data (will be removed)
 │   │   │   ├── _LABELLED_SAMPLES
@@ -41,20 +43,29 @@ ssdmobilenetv1은 무언가 훈련이 잘못되어 있는 듯한 모습을 보�
 │   │   ├── video
 │   │   ├── image2label.py
 │   │   └── video2image.py
-│   ├── custom_augmentation.sh
 │   ├── egohand_augmentation.sh
-│   ├── augmentation.py
-│   ├── split_data.py
 │   ├── ssd_prepare.py 
+│   └── test
+│   └── validation
 │   └── yolo_prepare.py
 ├── modules
-│   ├── handmodels.py
+│   ├── models
+│   │   ├── ssdmobilenetv1
+│   │   ├── ssdmobilenetv2
+│   │   ├── yolov3-tiny
+│   │   └── yolov4-tiny
+│   ├── ssd_utils.py
+│   └── yolo_utils.py
 ├── train
-│   ├── train_ssd_mobilenetv2.py
-│   ├── train_yolov4.ipynb
-│   ├── train_yolov3.ipynb
-├── test.py
+│   ├── ssdmobilenetv2
+│   ├── yolov3-tiny
+│   └── yolov4-tiny
+├── valid_result
+├── test_result
 ├── demo.py
+├── evaluate_mAP.py
+├── model.py
+├── test.py
 ├── requirements.txt
 ├── README.md
 └── venv
@@ -267,9 +278,9 @@ $ python evaluate_mAP.py --model {model_name}
 
 #### reference
 * dataset
-
+  - http://vision.soic.indiana.edu/projects/egohands/
 * data labeling
-
+  - https://github.com/tzutalin/labelImg
 * data augmentation
   - https://github.com/Paperspace/DataAugmentationForObjectDetection  
 
