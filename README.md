@@ -85,11 +85,22 @@ yolov4의 경우, 기존의 YOLO에 Bag of freebies, Bag of specials 성능 향�
 ```
 
 ### custom dataset 
-* situation
-- each 2 people, 2 view points(옆, 앞)
-  - 깍지손 (10초)
-  - 필기 중인 손
-  - 
+- situation : each 5 people, 2 view points(front, side)
+  - front view (100 images)
+    - main action
+      - writing
+      - shaking
+      - more actions ... (TBD)
+
+  - side view (280 images)
+    - main action
+      - chining
+      - drinking
+      - shaking
+      - streching
+      - stroking
+      - writing
+
 
 ## How to test?
 0. 환경 구축 
