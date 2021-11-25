@@ -178,9 +178,9 @@ python demo.py --eval_data dataset/{test dir}--ObjectDetection yolov4-tiny
 
 ## How to train with custom data & fine tuning?
 
-* ssdmobilenetv2 : 
-* yolov3-tiny :
-* yolov4-tiny :
+* ssdmobilenetv2 : [how to train ssdmobilenetv2](train/ssdmobilenetv2)
+* yolov3-tiny : [how to train yolov3-tiny](train/yolov3-tiny)
+* yolov4-tiny : [how to train yolov4-tiny](train/yolov4-tinys)
 
 
 #### reference
