@@ -22,7 +22,6 @@ side_view/
 models-master/
 validation/
 venv/
-CMUdataset/
 
 *.mp4
 *.mov
