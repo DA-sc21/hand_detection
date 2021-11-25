@@ -3,12 +3,10 @@
 ## analysis result
 
 #### test mAP & inference time & memory 
-##### front view
-(100 images-->추후 200까지 늘릴 예정)
+##### front view (100 images-->200 TBD.)
 <img src="imgs/front_view_result_100.png" width="70%">
 
-##### side view 
-(280 images)
+##### side view (280 images)
 <img src="imgs/side_view_result_280.png" width="70%">
 
 #### validation mAP & inference time & memory (egohand evaluation data(400 images))
