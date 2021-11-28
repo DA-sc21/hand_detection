@@ -165,7 +165,39 @@ yolov4의 경우, 기존의 YOLO에 Bag of freebies, Bag of specials 성능 향�
   <image_path>, <width>, <height>, <class>, <min_x>, <min_y>, <max_x>, <max_y>
   ```
 
- 
++++ CMU dataset & oxford data 전처리 및 data split 하여 train.txt, test.txt 만들기
+* CMU dataset (keypoint -> txt)
+```bash
+# 1-1. CMU로 directory change
+$ cd dataset/CMUdataset
+
+# 1-2. 원하는 keypoint 파일 .json -> .txt
+# l,r 구분 지우고 .txt 파일 저장되도록 함
+$ python keypoint2bbox.py --dataset_path {keypoint dataset path} --mode {train/test}
+
+# 1-3. train.txt, test.txt 생성
+$ python split_train_test.py
+```
+
+* oxford dataset (.mat -> yolo annotation .txt)
+```bash
+# 2-1. oxford로 directory change
+$ cd dataset/oxford
+
+# 2-2. .mat -> .txt 좌표 yolo 형식으로 수정
+$ python singlemat2txt.py --mode {training/valiation/test}
+
+# 2-3. train.txt, test.txt 생성
+$ python split_train_test.py
+```
+
+##### dataset 비율 다양하게 실험하기
+1-5. train, test 비율 정해주기 
+```text
+
+```
+
+
 2. test or demo
 
 * test : get inference time for sec/per image, get mAP
