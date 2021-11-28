@@ -194,9 +194,39 @@ $ python split_train_test.py
 ##### dataset 비율 다양하게 실험하기
 1-5. train, test 비율 정해주기 
 ```text
+egohand , CMU, oxford(train+valid)
+(4500 + 1000 + (4000+700)) , (500 + 440 + 800)
+- only ego hand (4500,500)
+    - train : 4500 (train.txt)
+    - test : 500 (test.txt)
+    - obj.data
+    - obj.names
+    - yolov4-tiny-custom.cfg
 
+- egohand + CMU dataset + oxford = 2:1:2 → CMU dataset을 모두 사용하는 경우
+    - train : 2000 + 1000 + 2000 (train_2_1_2.txt)
+    - test : 500 + 250 + 500 (test_2_1_2.txt)
+    - obj_2_1_2.data
+    - yolov4-tiny_2_1_2.cfg
+- egohand + CMU dataset + oxford = 4:1:4  → 양을 중요시 하는 경우
+    - train : 4000 + 1000 + 4000 (train_4_1_4.txt)
+    - test :  500+ 200 +600 (test_4_1_4.txt)
+    - obj_4_1_4.data
+    - yolov4-tiny_4_1_4.cfg
+- egohand + CMU dataset + oxford = 8:1:4→ 가장 상황과 맞는 egohand dataset을 많이 활용하고 싶은 경우
+    - train : 4000 + 500 + 2000 (train_8_1_4.txt)
+    - test : 500 + 100 + 300 (test_8_1_4.txt)
+    - obj_8_1_4.data
+    - yolov4-tiny_8_1_4.cfg
 ```
 
+```bash
+# 비율에 따라 다르게 train.txt, test.txt 파일 생성
+$ cd dataset/
+$ python make_dataset_txt.py --mode {train/test} --ratio {2_1_2/4_1_4/8_1_4}
+```
+
+<br />
 
 2. test or demo
 
