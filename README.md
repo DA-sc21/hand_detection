@@ -193,6 +193,7 @@ $ python split_train_test.py
 
 ##### dataset 비율 다양하게 실험하기
 1-5. train, test 비율 정해주기 
+이는 random으로 split 및 순서를 shuffling할 수 있도록 설계하였다.
 ```text
 egohand , CMU, oxford(train+valid)
 (4500 + 1000 + (4000+700)) , (500 + 440 + 800)
