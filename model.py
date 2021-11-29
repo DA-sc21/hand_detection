@@ -19,8 +19,14 @@ class Model():
         elif opt.ObjectDetection == 'ssdmobilenetv2':
             self.ObjectDetection, self.sess = ssd_utils.load_inference_graph(opt.ObjectDetection)
         elif opt.ObjectDetection == 'yolov4-tiny':
-            self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_only_egodataset.weights", ["hand"])
-            # self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/cross-hands-yolov4-tiny.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/cross-hands-yolov4-tiny.weights", ["hand"])
+            if opt.mode == "1_0_0":
+                self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_only_egodataset.weights", ["hand"])
+            elif opt.mode == "2_1_2":
+                pass
+            elif opt.mode == "4_1_4":
+                self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_4_1_4.weights", ["hand"])
+            else :
+                self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_8_1_4.weights", ["hand"])
         elif opt.ObjectDetection == 'yolov3-tiny':
             self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/yolov3-tiny-prn-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/yolov3-tiny-prn-custom_only_egodataset.weights", ["hand"])
             # self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/cross-hands-tiny-prn.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov3-tiny/cross-hands-tiny-prn.weights", ["hand"])
