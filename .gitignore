@@ -9,6 +9,9 @@ __pycache__/
 images/
 egohands/
 hand_labels/
+
+dataset/CMUdataset/test/
+dataset/CMUdataset/train/
 video*/
 temp/
 output/
@@ -29,6 +32,8 @@ venv/
 *.tar.gz
 *.zip
 
+
+*.m
 checkpoint
 *.pb
 *.index
