@@ -74,6 +74,12 @@ EgoHands , CMU, oxford(train+valid)
     - obj_8_1_4.data
 ```
 
+##### test mAP
+picture !!!!!
+
+##### 성능 분석
+
+
 <br />
 
 #### 2-2. 최적의 dataset에서 Bag of Freebies, Bag of specials 적용
