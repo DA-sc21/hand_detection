@@ -95,10 +95,6 @@ TBD.
 .
 ├── README.md
 ├── dataset
-│   ├── aug_utils
-│   │   ├── bbox_util.py
-│   │   ├── data_aug.py
-│   ├── augmentation.py
 │   ├── custom
 │   │   ├── front_view
 │   │   ├── images
@@ -108,7 +104,6 @@ TBD.
 │   │   ├── yolo_annotations
 │   │   ├── images.txt
 │   │   └── xml2txt.py
-│   ├── custom_augmentation.sh
 │   ├── egohand
 │   │   ├── egohands_data (will be removed)
 │   │   │   ├── _LABELLED_SAMPLES
@@ -120,12 +115,10 @@ TBD.
 │   ├── raw_custom
 │   │   ├── video
 │   │   └── video2image.py
-│   ├── egohand_augmentation.sh
-│   ├── ssd_prepare.py 
 │   ├── csv2txt.py 
 │   ├── tests
 │   ├── train
-│   └── yolo_prepare.py
+│   └── make_dataset_txt.py
 ├── modules
 │   ├── models
 │   │   ├── ssdmobilenetv1
@@ -209,7 +202,9 @@ TBD.
     $ python xml2txt.py --mode test
     ```
 
- 
+cf ) how to get pretrained .weights?
+
+
 2. test or demo
 
 * test : get inference time for sec/per image, get mAP
