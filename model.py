@@ -22,7 +22,7 @@ class Model():
             if opt.mode == "1_0_0":
                 self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_only_egodataset.weights", ["hand"])
             elif opt.mode == "2_1_2":
-                pass
+                self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_2_1_2.weights", ["hand"])
             elif opt.mode == "4_1_4":
                 self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_4_1_4.weights", ["hand"])
             else :
@@ -40,7 +40,6 @@ class Model():
             if model == 'yolov4-tiny' or model == 'yolov3-tiny':
                 conf_sum = 0
                 detection_count = 0
-                print(files)
                 for file in files:
                     print(file)
                     mat = cv2.imread(file)
