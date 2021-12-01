@@ -7,7 +7,7 @@
 - model : ssd_mobilenetv1, ssd_mobilenetv2, yolov4-tiny, yolov3-tiny
 - train data : Egohands dataset
 - test data : custom data (labeling in person)
-  - front view : 100 -> 200 TBD.
+  - front view : 200
   - side view : 280
 
 
@@ -15,15 +15,18 @@
 
 ##### test mAP & inference time & memory 
 ###### front view
-<img src="imgs/front_view_result_100.png" width="80%">
+<img src="imgs/front_view_result_200.png" width="90%">
 
 ###### side view (280 images)
-<img src="imgs/side_view_result_280.png" width="80%">
+<img src="imgs/side_view_result_280.png" width="90%">
 
 ##### validation mAP & inference time & memory (egohand evaluation data(400 images))
-<img src="imgs/validation_result.png" width="80%">
+<img src="imgs/validation_result.png" width="90%">
 
 <br />
+
+#### 선택 모델
+<mark style='background-color: #dcffe4'><b>yolov4-tiny</b></mark>
 
 #### 모델 선정 근거
 시간 관계상 open source에서 제공되는 ssdmobilenetv1은 모델 구조와 모델 가중치를 포함하는 .pb 를 그대로 사용하고, ssdmobilenetv2, yolov3-tiny-prn, yolov4-tiny에 대해서는 데이터를 수정하고, model config를 수정하여 직접 학습하였다.
@@ -33,7 +36,7 @@ validation set은 test data와 유사하기 때문에 높은 mAP를 보였지만
 
 yolov4의 경우, 기존의 YOLO에 Bag of freebies, Bag of specials 성능 향상 기법을 추가하고, universal한 feature를 추출하여 학습할 수 있도록 하였기 때문에 이와 같은 결과가 나왔을 것이라 생각한다. 
   
-따라서 yolov4-tiny에 다양한 각도의 hand data를 추가하여 fine tuning을 진행해보고자 한다.
+따라서 <mark style='background-color: #dcffe4'>yolov4-tiny</mark>에 다양한 각도의 hand data를 추가하여 fine tuning을 진행해보고자 한다.
 
 <br />
 <br />
@@ -45,7 +48,7 @@ yolov4의 경우, 기존의 YOLO에 Bag of freebies, Bag of specials 성능 향�
 - model : yolov4-tiny
 - train data : EgoHands dataset, CMU dataset, oxford dataset
 - test data : custom data (labeling in person)
-  - front view : 100 -> 200 TBD.
+  - front view : 200
   - side view : 280
 
 ```text
@@ -58,7 +61,7 @@ EgoHands , CMU, oxford(train+valid)
     - obj.names
     - yolov4-tiny-custom.cfg
 
-- EgoHands + CMU dataset + oxford = 2:1:2 → CMU dataset 성능을 중요시 하는 경우 
+- EgoHands + CMU dataset + oxford = 2:1:2 → dataset을 골고루 섞은 경우 
     - train : 2000 + 1000 + 2000 (train_2_1_2.txt)
     - validation : 500 + 250 + 500 (test_2_1_2.txt)
     - obj_2_1_2.data
@@ -75,15 +78,31 @@ EgoHands , CMU, oxford(train+valid)
 ```
 
 ##### test mAP
-picture !!!!!
+<img src="imgs/add_dataset_result.png" width="90%">
 
-##### 성능 분석
+<br />
 
+##### 결과 분석
+CMU, oxford data를 추가하여 데이터를 다양하게 하였기 때문에 front view, side view에서 눈에 띄게 성능이 향상된 것을 확인할 수 있다.
+
+egohand:CMU:oxford=2:1:2의 경우, 기존 모델과 데이터의 양은 비슷하지만, real domain data들이 추가되었기 때문에 데이터의 다양성으로 기존보다 front view에서 6%, side view에서 20%의 성능을 향상시킬 수 있었다.
+
+egohand:CMU:oxford=4:1:4의 경우, 가장 데이터가 많은 모델이다. side view data가 추가되어 side view에서는 20% 성능을 향상시켰지만, front view data에서는 드라마틱한 성장을 보이지 못하였다. 이를 통해, 데이터의 수가 무조건 많은 것보다 데이터의 품질(다양성)이 중요하다는 것을 알 수 있다.
+
+egohand:CMU:oxford=8:1:4의 경우, front view에서는 약 10%의 향상을 보이고, side view에서는 18%의 성능 향상을 보여주었다. Egohand data가 시험 환경과 비슷할 것이라고 예측하여 Egohands 데이터 비율을 많이 한 것으로, 실제로 Front view에서 가장 높은 mAP를 보여준 것을 확인할 수 있다. 
+
+EgoHands:CMU:oxford 2:1:2과 8:1:4가 성능이 비슷하여, real time WebCamera로 실험해보았다. 그 결과 yolov4-tiny_2_1_2가 background error를 덜 인식하므로 <mark style='background-color: #dcffe4'>yolov4-tiny_2_1_2</mark>를 선택하기로 하였다.
 
 <br />
 
 #### 2-2. 최적의 dataset에서 Bag of Freebies, Bag of specials 적용
-TBD.
+##### condition3
+- model : yolov4-tiny
+- train data : EgoHands dataset, CMU dataset, oxford dataset(선택한 비율)
+- test data : custom data (labeling in person)
+  - front view : 200
+  - side view : 280
+
 
 
 <br />
