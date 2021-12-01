@@ -85,11 +85,11 @@ EgoHands , CMU, oxford(train+valid)
 ##### 결과 분석
 CMU, oxford data를 추가하여 데이터를 다양하게 하였기 때문에 front view, side view에서 눈에 띄게 성능이 향상된 것을 확인할 수 있다.
 
-egohand:CMU:oxford=2:1:2의 경우, 기존 모델과 데이터의 양은 비슷하지만, real domain data들이 추가되었기 때문에 데이터의 다양성으로 기존보다 front view에서 6%, side view에서 20%의 성능을 향상시킬 수 있었다.
+egohand:CMU:oxford=2:1:2의 경우, 기존 모델과 데이터의 양은 비슷하지만, real domain data들이 추가되었기 때문에 데이터의 다양성으로 기존보다 front view에서 10%, side view에서 20%의 성능을 향상시킬 수 있었다.
 
 egohand:CMU:oxford=4:1:4의 경우, 가장 데이터가 많은 모델이다. side view data가 추가되어 side view에서는 20% 성능을 향상시켰지만, front view data에서는 드라마틱한 성장을 보이지 못하였다. 이를 통해, 데이터의 수가 무조건 많은 것보다 데이터의 품질(다양성)이 중요하다는 것을 알 수 있다.
 
-egohand:CMU:oxford=8:1:4의 경우, front view에서는 약 10%의 향상을 보이고, side view에서는 18%의 성능 향상을 보여주었다. Egohand data가 시험 환경과 비슷할 것이라고 예측하여 Egohands 데이터 비율을 많이 한 것으로, 실제로 Front view에서 가장 높은 mAP를 보여준 것을 확인할 수 있다. 
+egohand:CMU:oxford=8:1:4의 경우, front view에서는 약 5%의 향상을 보이고, side view에서는 18%의 성능 향상을 보여주었다. Egohand data가 시험 환경과 비슷할 것이라고 예측하여 Egohands 데이터 비율을 많이 한 것으로, 실제로 Front view에서 가장 높은 mAP를 보여준 것을 확인할 수 있다. 
 
 EgoHands:CMU:oxford 2:1:2과 8:1:4가 성능이 비슷하여, real time WebCamera로 실험해보았다. 그 결과 yolov4-tiny_2_1_2가 background error를 덜 인식하므로 <mark style='background-color: #dcffe4'>yolov4-tiny_2_1_2</mark>를 선택하기로 하였다.
 
