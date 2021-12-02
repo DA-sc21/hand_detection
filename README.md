@@ -17,8 +17,36 @@
 ###### front view
 <img src="imgs/front_view_result_200.png" width="90%">
 
+```text
+- ssd_mobilenetv1
+mAP : 78.55% , precision : 0.78 , recall : 0.84 , f1-score : 0.81
+
+- ssd_mobilenetv2
+mAP : 34.51% , precision : 0.36 , recall : 0.52 , f1-score : 0.43
+
+- yolov3-tiny
+mAP : 75.46% , precision : 0.90 , recall : 0.78 , f1-score : 0.84
+
+- yolov4-tiny
+mAP : 84.68% , precision : 0.89 , recall : 0.86 , f1-score : 0.87
+```
+
 ###### side view (280 images)
 <img src="imgs/side_view_result_280.png" width="90%">
+
+```text
+- ssd_mobilenetv1
+mAP : 8.20% , precision : 0.29 , recall : 0.24 , f1-score : 0.26
+
+- ssd_mobilenetv2
+mAP : 3.70% , precision : 0.17 , recall : 0.12 , f1-score : 0.14 
+
+- yolov3-tiny
+mAP : 4.37% , precision : 0.45 , recall : 0.08 , f1-score : 0.14
+
+- yolov4-tiny
+mAP : 28.80% , precision : 0.65 , recall : 0.33 , f1-score : 0.44
+```
 
 ##### validation mAP & inference time & memory (egohand evaluation data(400 images))
 <img src="imgs/validation_result.png" width="90%">
@@ -62,12 +90,12 @@ EgoHands , CMU, oxford(train+valid)
     - yolov4-tiny-custom.cfg
 
 - EgoHands + CMU dataset + oxford = 2:1:2 → dataset을 골고루 섞은 경우 
-    - train : 2000 + 1000 + 2000 (train_2_1_2.txt)
+    - train : 2000 + 950 + 2000 (train_2_1_2.txt)
     - validation : 500 + 250 + 500 (test_2_1_2.txt)
     - obj_2_1_2.data
 
 - EgoHands + CMU dataset + oxford = 4:1:4  → 데이터 양을 중요시 하는 경우
-    - train : 4000 + 1000 + 4000 (train_4_1_4.txt)
+    - train : 4000 + 950 + 4000 (train_4_1_4.txt)
     - validation validation :  500+ 200 +600 (test_4_1_4.txt)
     - obj_4_1_4.data
 
@@ -80,9 +108,38 @@ EgoHands , CMU, oxford(train+valid)
 ##### test mAP
 <img src="imgs/add_dataset_result.png" width="90%">
 
+```text
+- front view
+  - only EgoHands
+    mAP : 84.68% , precision : 0.89 , recall : 0.86 , f1-score : 0.87
+
+  - EgoHands + CMU dataset + oxford = 2:1:2 
+    mAP : 92.10% , precision : 0.98 , recall : 0.92 , f1-score : 0.95
+
+  - EgoHands + CMU dataset + oxford = 4:1:4 
+    mAP : 81.33% , precision : 0.93 , recall : 0.88 , f1-score : 0.88
+
+  - EgoHands + CMU dataset + oxford = 8:1:4
+    mAP : 89.81% , precision : 0.96 , recall : 0.90 , f1-score : 0.93
+
+-side view
+  - only EgoHands
+    mAP : 28.80% , precision : 0.65 , recall : 0.33 , f1-score : 0.44
+
+  - EgoHands + CMU dataset + oxford = 2:1:2 
+    mAP : 48.85% , precision : 0.92 , recall : 0.51 ,f1-score : 0.66
+
+  - EgoHands + CMU dataset + oxford = 4:1:4 
+    mAP : 48.95% , precision : 0.91 , recall : 0.51 ,f1-score : 0.65
+
+  - EgoHands + CMU dataset + oxford = 8:1:4
+    mAP : 46.95% , precision : 0.90 , recall : 0.50 ,f1-score : 0.64
+```
+
 <br />
 
 ##### 결과 분석
+
 CMU, oxford data를 추가하여 데이터를 다양하게 하였기 때문에 front view, side view에서 눈에 띄게 성능이 향상된 것을 확인할 수 있다.
 
 egohand:CMU:oxford=2:1:2의 경우, 기존 모델과 데이터의 양은 비슷하지만, real domain data들이 추가되었기 때문에 데이터의 다양성으로 기존보다 front view에서 10%, side view에서 20%의 성능을 향상시킬 수 있었다.
@@ -96,9 +153,11 @@ EgoHands:CMU:oxford 2:1:2과 8:1:4가 성능이 비슷하여, real time WebCamer
 <br />
 
 #### 2-2. 최적의 dataset에서 optimizer 수정 및 Bag of Freebies 적용
+
 ##### condition3
+
 - model : yolov4-tiny
-- train data : EgoHands dataset, CMU dataset, oxford dataset = 2:1:2
+- train data : EgoHands dataset, CMU dataset, oxford dataset = 2000:950:2000 
 - test data : custom data (labeling in person)
   - front view : 200
   - side view : 280
@@ -110,12 +169,42 @@ EgoHands:CMU:oxford 2:1:2과 8:1:4가 성능이 비슷하여, real time WebCamer
 <br />
 
 ##### test mAP
-(picture!!!!)
+
+<img src="imgs/modify_option_result.png" width="90%">
+
+```text
+- front view
+  - default
+    mAP : 92.10% , precision : 0.98 , recall : 0.92 , f1-score : 0.95
+
+  - modify optimizer : momentum -> adam
+    mAP : 80.4% , precision : 0.94 , recall : 0.82 , f1-score : 0.88
+
+  - add data augmetation option mosaic
+    mAP : 79.47% , precision : 0.90 , recall : 0.81 , f1-score : 0.85
+
+-side view
+  - default
+    mAP : 48.85% , precision : 0.92 , recall : 0.51 ,f1-score : 0.66
+
+  - modify optimizer : momentum -> adam
+    mAP : 50.66% , precision : 0.92 , recall : 0.53 ,f1-score : 0.67
+
+  - add data augmetation option mosaic
+    mAP : 39.71% , precision : 0.83 , recall : 0.44 ,f1-score : 0.58
+```
+
 
 <br />
 
 ##### 결과 분석
 
+mAP를 측정해본 결과, optimizer은 adam보다 momentum이 더 좋은 성능을 보인다는 것을 알 수 있었다. training 시 data augmentation을 위해, saturation, exposure, hue을 하는 것에 mosaic을 추가하면 성능이 오히려 떨어지는 것을 확인할 수 있었다.
+
+최종적으로 선택한 모델은 **yolov4-tiny** 이고, option은 다음과 같다.
+- dataset = EgoHands dataset, CMU dataset, oxford dataset = 2000:950:2000 
+- optimizer : momentum
+- data augmentation : saturation, exposure, hue
 
 <br />
 <br />
@@ -234,21 +323,23 @@ EgoHands:CMU:oxford 2:1:2과 8:1:4가 성능이 비슷하여, real time WebCamer
     ```
 
 cf ) how to get pretrained .weights?
-
+~~ releases 참고~~ or wget~!
 
 2. test or demo
 
 * test : get inference time for sec/per image, get mAP
 * demo : show detect result through opencv window
 ```bash
-python test.py --eval_data dataset/{test dir}--ObjectDetection yolov4-tiny --mode {check under txt}
-python demo.py --eval_data dataset/{test dir}--ObjectDetection yolov4-tiny --mode {check under txt}
+$ python test.py --eval_data dataset/{test dir}--ObjectDetection yolov4-tiny --mode {check under txt} --option {check under txt}
+$ python demo.py --eval_data dataset/{test dir}--ObjectDetection yolov4-tiny --mode {check under txt} -- option {check under txt}
 ```
+<br />
 ```txt
 argument
 [--eval_data] : test dataset path
 [--ObjectDetection] : ssdmobilenetv1 | ssd_mobilenetv2 | yolov4-tiny | yolov3-tiny 
 [--mode] : 1_0_0 | 2_1_2 | 4_1_4 | 8_1_4 -> yolov4-tiny dataset 비중 (egohands : CMU : oxford)
+[--option] : no | optimizer | augmentation (egohands : CMU : oxford=2:1:2에서 option을 다르게 훈련한 경우)
 ```
 ``` txt
   모듈로 embeded 함 
@@ -321,8 +412,46 @@ $ python make_dataset_txt.py --mode {train/test} --ratio {2_1_2/4_1_4/8_1_4}
 <br />
 
 
+## cf ) 모든 성능 한 눈에 보기
 
-#### reference
+#### front_view(custom data)
+
+| model | train data | option | mAP | precision | recall | f1-score |
+| --- | --- |  --- |  --- |  --- |  --- |  --- | 
+| ssd_mobilenetv1 | only EgoHands | X | 78.55% | 0.78 | 0.84 |  0.81 | 
+| ssd_mobilenetv2 | only EgoHands| X | 34.51% | 0.36 | 0.52 | 0.43 | 
+| yolov3-tiny | only EgoHands | X | 75.46% | 0.90 | 0.78 |  0.84 | 
+| yolov4-tiny | only EgoHands | X | 84.68% | 0.89 | 0.86 | 0.87 |  
+| --- | --- |  --- |  --- |  --- |  --- |  --- | 
+| 1. 성능 향상을 위한 dataset 비율 수정 |||||||
+| **yolov4-tiny** | **EgoHands:CMU:oxford= 2000:950:2000** | X | **92.10%** | 0.98 | 0.92 | 0.95 | 
+| yolov4-tiny| EgoHands:CMU:oxford=4000:950:4000 | X | 81.33% | 0.93 | 0.88 | 0.88 | 
+| yolov4-tiny | EgoHands:CMU:oxford=4000:500:2000 | X | 89.81% | 0.96 | 0.90 | 0.93 | 
+| --- | --- |  --- |  --- |  --- |  --- |  --- | 
+| 2. 성능 향상을 위한 optimizer, data augmentation option 수정|||||||
+| yolov4-tiny| EgoHands:CMU:oxford=2000:950:2000 | optimizer : momentum -> adam | 80.4% | 0.94 | 0.82 | 0.88 | 
+| yolov4-tiny | EgoHands:CMU:oxford=2000:950:2000 |data aug. : add mosaic | 79.47% | 0.90 | 0.81 | 0.85 |
+
+#### side_view(custom data)
+| model | train data | option | mAP | precision | recall | f1-score |
+| --- | --- |  --- |  --- |  --- |  --- |  --- | 
+| ssd_mobilenetv1 | only EgoHands | X | 8.20% | 0.29 | 0.24 | 0.26 | 
+| ssd_mobilenetv2 | only EgoHands| X | 3.7% | 0.17 | 0.12 | 0.14 | 
+| yolov3-tiny | only EgoHands | X | 4.37% | 0.45 | 0.08 | 0.14 | 
+| yolov4-tiny | only EgoHands | X | 28.80% | 0.65 | 0.33 | 0.44 | 
+| --- | --- |  --- |  --- |  --- |  --- |  --- | 
+| 1. 성능 향상을 위한 dataset 비율 수정 |||||||
+| yolov4-tiny | EgoHands:CMU:oxford= 2000:950:2000| X | 48.85% | 0.92 | 0.51 | 0.66 | 
+| yolov4-tiny| EgoHands:CMU:oxford=4000:950:4000 | X | 48.95% | 0.91 | 0.51 | 0.65 | 
+| yolov4-tiny | EgoHands:CMU:oxford=4000:500:2000 | X | 46.95% | 0.90 | 0.50 | 0.64 | 
+| --- | --- |  --- |  --- |  --- |  --- |  --- | 
+| 2. 성능 향상을 위한 optimizer, data augmentation option 수정|||||||
+| yolov4-tiny| EgoHands:CMU:oxford=2000:950:2000 | optimizer : momentum -> adam | 50.66% | 0.92 | 0.53 | 0.67 | 
+| yolov4-tiny | EgoHands:CMU:oxford=2000:950:2000 |data aug. : add mosaic | 39.71% | 0.83 | 0.44 | 0.58 |
+
+<br />
+
+### reference
 * dataset
   - EgoHands
   http://vision.soic.indiana.edu/projects/egohands/
