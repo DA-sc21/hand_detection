@@ -95,14 +95,26 @@ EgoHands:CMU:oxford 2:1:2과 8:1:4가 성능이 비슷하여, real time WebCamer
 
 <br />
 
-#### 2-2. 최적의 dataset에서 Bag of Freebies, Bag of specials 적용
+#### 2-2. 최적의 dataset에서 optimizer 수정 및 Bag of Freebies 적용
 ##### condition3
 - model : yolov4-tiny
 - train data : EgoHands dataset, CMU dataset, oxford dataset = 2:1:2
 - test data : custom data (labeling in person)
   - front view : 200
   - side view : 280
+- modify things
+  - 0. default
+  - 1. optimizer : momentum -> adam
+  - 2. add data augmetation option mosaic
 
+<br />
+
+##### test mAP
+(picture!!!!)
+
+<br />
+
+##### 결과 분석
 
 
 <br />
