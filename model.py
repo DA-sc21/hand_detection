@@ -22,7 +22,12 @@ class Model():
             if opt.mode == "1_0_0":
                 self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_only_egodataset.weights", ["hand"])
             elif opt.mode == "2_1_2":
-                self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_2_1_2.weights", ["hand"])
+                if opt.option == "no" :
+                    self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_2_1_2.weights", ["hand"])
+                elif opt.option == "optimizer":
+                    self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_mod_optimizer.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_mod_optimizer.weights", ["hand"])
+                else :
+                    self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_data_aug.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_data_aug.weights", ["hand"])
             elif opt.mode == "4_1_4":
                 self.ObjectDetection = YOLO("/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom.cfg", "/Users/yejoonko/git/Project/Capstone/hand_detection/modules/models/yolov4-tiny/yolov4-tiny-custom_4_1_4.weights", ["hand"])
             else :

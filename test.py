@@ -30,7 +30,7 @@ if __name__ == '__main__':
     parser.add_argument('--ObjectDetection', type=str, required=True, help='ObjectDetection stage. ssdmobilenetv1|ssdmobilenetv2 \
     yolov3-tiny|yolov4-tiny|mediapipe')
     parser.add_argument('--mode', type=str, default = '1_0_0',help='choose data mode of yolov4-tiny egohand : CMU : oxford = 1_0_0/2_1_2/4_1_4/8_1_4')
-
+    parser.add_argument('--option', type=str, default = 'no',help='choose modification 2_1_2 of no or optimizer or augmentation')
     opt = parser.parse_args()
 
     test(opt)
