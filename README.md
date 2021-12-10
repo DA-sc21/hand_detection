@@ -174,9 +174,9 @@ EgoHands:CMU:oxford 2:1:2과 8:1:4가 성능이 비슷하여, real time WebCamer
   - front view : 200
   - side view : 280
 - modify things
-  - 0. default
-  - 1. optimizer : momentum -> adam
-  - 2. add data augmetation option mosaic
+  - a. default
+  - b. optimizer : momentum -> adam
+  - c. add data augmetation option mosaic
 
 <br />
 
@@ -213,7 +213,7 @@ EgoHands:CMU:oxford 2:1:2과 8:1:4가 성능이 비슷하여, real time WebCamer
 
 mAP를 측정해본 결과, optimizer은 adam보다 momentum이 더 좋은 성능을 보인다는 것을 알 수 있었다. training 시 data augmentation을 위해, saturation, exposure, hue을 하는 것에 mosaic을 추가하면 성능이 오히려 떨어지는 것을 확인할 수 있었다.
 
-최종적으로 선택한 모델은 **yolov4-tiny** 이고, option은 다음과 같다.
+최종적으로 선택한 모델은 **YOLOv4-tiny** 이고, option은 다음과 같다.
 - dataset = EgoHands dataset, CMU dataset, oxford dataset = 2000:950:2000 
 - optimizer : momentum
 - data augmentation : saturation, exposure, hue
@@ -302,22 +302,22 @@ mAP를 측정해본 결과, optimizer은 adam보다 momentum이 더 좋은 성�
 
 ## How to test?
 
-0. 환경 구축 
+a. 환경 구축 
 
- 0-1. virtualenv 환경 구축
+ 1. virtualenv 환경 구축
  ```bash
  $ cd hand_detection/
  $ virtualenv --python=3.7 venv
  $ source venv/bin/activate
  ```
- 0-2. requirements.txt 설치
+ 2. requirements.txt 설치
  ```bash
  $ pip install -r requirements.txt
  ```
 
 <br />
 
-1. test dataset 준비
+b. test dataset 준비
   * custom dataset(.xml -> .txt)
     * video -> image
     raw_custom에 video 추가하기 
@@ -327,7 +327,7 @@ mAP를 측정해본 결과, optimizer은 adam보다 momentum이 더 좋은 성�
     ```
 
     * .xml label 생성 
-    https://github.com/tzutalin/labelImg tool 활용 
+    [labelImg](https://github.com/tzutalin/labelImg) tool 활용 
 
     * cf ) make validation set or test set for calculate mAP (.xml-> .txt)
     <'class_name'> <'x_min'> <'y_min'> <'x_max'> <'y_max'>
@@ -337,6 +337,7 @@ mAP를 측정해본 결과, optimizer은 adam보다 momentum이 더 좋은 성�
     ```
 
 cf ) how to get pretrained .weights?
+
 i. [releases](https://github.com/DA-sc21/hand_detection/releases) 에서 weights 다운로드
 
 ii. wget으로 weights 얻기 
@@ -354,20 +355,22 @@ $ wget https://github.com/DA-sc21/hand_detection/releases/latest/download/yolov3
 $ wget https://github.com/DA-sc21/hand_detection/releases/latest/download/yolov4-tiny.zip
 ```
 
-2. demo or test
+c. demo or test
+
 * demo : show detect result through opencv window -> ground truth 없이 이미지 dataset만 있다면 가능하다.
 다음과 같이 특정 모델에 대해 예측 결과 bounding box를 openCV window로 확인할 수 있다. 
-<img src="imgs/demo_example.png">
+<img src="imgs/demo_example.png" width="80%">
 
 * test : get inference time for sec/per image, get mAP -> ground truth가 있는 dataset에 대해 가능하다. 
 다음과 같은 output.txt를 얻을 수 있다. 얻어진 fp, tp, total num of detect hands, total num of groundtruth hands 를 통해 Recall, precision을 구할 수 있다.
-<img src="imgs/test_example.png">
+<img src="imgs/test_example.png" width="80%">
 
 ```bash
 $ python demo.py --eval_data dataset/{test dir}--ObjectDetection yolov4-tiny --mode {check under txt} --option {check under txt}
 $ python test.py --eval_data dataset/{test dir}--ObjectDetection yolov4-tiny --mode {check under txt} --option {check under txt}
 ```
 <br />
+
 ```text
 argument
 [--eval_data] : test dataset path
@@ -375,6 +378,7 @@ argument
 [--mode] : 1_0_0 | 2_1_2 | 4_1_4 | 8_1_4 -> yolov4-tiny dataset 비중 (egohands : CMU : oxford)
 [--option] : no | optimizer | augmentation (egohands : CMU : oxford=2:1:2에서 option을 다르게 훈련한 경우)
 ```
+
 ``` text
   모듈로 embeded 함 
   test : ssdmobilenetv1 | ssd_mobilenetv2 | yolov4-tiny | yolov3-tiny 
@@ -387,6 +391,7 @@ argument
 <br />
 
 ## How to train ? What is method ?
+
 ### train code
 * SSD_MobileNetv2 : [how to train SSD_MobileNetv2](train/ssdmobilenetv2)
 * YOLOv3-tiny : [how to train yolov3-tiny](train/YOLOv3-tiny)
@@ -396,47 +401,47 @@ argument
 ## How to train with data & fine tuning (ft. YOLOv4-tiny)?
 ### dataset 비율 다양하게 실험하기
 
-1. dataset 준비
+a. dataset 준비
 -> 전처리 및 data split
 
 ```text
 <class> <x_center> <y_center> <width> <height> (0~1 사이의 값으로 변환도 필요)
 ```  
 
-  1-1. egohand dataset
+  1. egohand dataset
    * .mat -> .txt
    ```bash
    $ cd dataset/egohand
    $ python mat2txt.py
    ```
   
-   1-2. CMU dataset (keypoint -> txt)
+   2. CMU dataset (keypoint -> txt)
   ```bash
-    # 1-1. CMU로 directory change
+    # 1. CMU로 directory change
     $ cd dataset/CMUdataset
     
-    # 1-2. 원하는 keypoint 파일 .json -> .txt
+    # 2. 원하는 keypoint 파일 .json -> .txt
     # l,r 구분 지우고 .txt 파일 저장되도록 함
     $ python keypoint2bbox.py --dataset_path {keypoint dataset path} --mode {train/test}
     
-    # 1-3. train.txt, test.txt 생성
+    # 3. train.txt, test.txt 생성
     $ python split_train_test.py
   ```
 
 
-   1-3.  oxford data (.mat -> yolo annotation .txt)
+   3.  oxford data (.mat -> yolo annotation .txt)
   ```bash
-    # 2-1. oxford로 directory change
+    # 1. oxford로 directory change
     $ cd dataset/oxford
 
-    # 2-2. .mat -> .txt 좌표 yolo 형식으로 수정
+    # 2. .mat -> .txt 좌표 yolo 형식으로 수정
     $ python singlemat2txt.py --mode {training/valiation/test}
 
-    # 2-3. train.txt, test.txt 생성
+    # 3. train.txt, test.txt 생성
     $ python split_train_test.py
   ```
 
-2. train, test 비율 정해주기 
+b. train, test 비율 정해주기 
 이는 random으로 split 및 순서를 shuffling할 수 있도록 설계하였다.
 [Go to method of split](#condition2)
 ```bash
@@ -454,36 +459,36 @@ $ python make_dataset_txt.py --mode {train/test} --ratio {2_1_2/4_1_4/8_1_4}
 
 | model | train data | option | mAP | precision | recall | f1-score |
 | --- | --- |  --- |  --- |  --- |  --- |  --- | 
-| ssd_mobilenetv1 | only EgoHands | X | 78.55% | 0.78 | 0.84 |  0.81 | 
-| ssd_mobilenetv2 | only EgoHands| X | 34.51% | 0.36 | 0.52 | 0.43 | 
-| yolov3-tiny | only EgoHands | X | 75.46% | 0.90 | 0.78 |  0.84 | 
-| yolov4-tiny | only EgoHands | X | 84.68% | 0.89 | 0.86 | 0.87 |  
+| SSD_MobileNetv1 | only EgoHands | X | 78.55% | 0.78 | 0.84 |  0.81 | 
+| SSD_MobileNetv2 | only EgoHands| X | 34.51% | 0.36 | 0.52 | 0.43 | 
+| YOLOv3-tiny | only EgoHands | X | 75.46% | 0.90 | 0.78 |  0.84 | 
+| YOLOv4-tiny | only EgoHands | X | 84.68% | 0.89 | 0.86 | 0.87 |  
 | --- | --- |  --- |  --- |  --- |  --- |  --- | 
 | 1. 성능 향상을 위한 dataset 비율 수정 |||||||
-| **yolov4-tiny** | **EgoHands:CMU:oxford= 2000:950:2000** | X | **92.10%** | 0.98 | 0.92 | 0.95 | 
-| yolov4-tiny| EgoHands:CMU:oxford=4000:950:4000 | X | 81.33% | 0.93 | 0.88 | 0.88 | 
-| yolov4-tiny | EgoHands:CMU:oxford=4000:500:2000 | X | 89.81% | 0.96 | 0.90 | 0.93 | 
+| **YOLOv4-tiny** | **EgoHands:CMU:oxford= 2000:950:2000** | X | **92.10%** | 0.98 | 0.92 | 0.95 | 
+| YOLOv4-tiny| EgoHands:CMU:oxford=4000:950:4000 | X | 81.33% | 0.93 | 0.88 | 0.88 | 
+| YOLOv4-tiny | EgoHands:CMU:oxford=4000:500:2000 | X | 89.81% | 0.96 | 0.90 | 0.93 | 
 | --- | --- |  --- |  --- |  --- |  --- |  --- | 
 | 2. 성능 향상을 위한 optimizer, data augmentation option 수정|||||||
-| yolov4-tiny| EgoHands:CMU:oxford=2000:950:2000 | optimizer : momentum -> adam | 80.4% | 0.94 | 0.82 | 0.88 | 
-| yolov4-tiny | EgoHands:CMU:oxford=2000:950:2000 |data aug. : add mosaic | 79.47% | 0.90 | 0.81 | 0.85 |
+| YOLOv4-tiny| EgoHands:CMU:oxford=2000:950:2000 | optimizer : momentum -> adam | 80.4% | 0.94 | 0.82 | 0.88 | 
+| YOLOv4-tiny | EgoHands:CMU:oxford=2000:950:2000 |data aug. : add mosaic | 79.47% | 0.90 | 0.81 | 0.85 |
 
 #### side_view(custom data)
 | model | train data | option | mAP | precision | recall | f1-score |
 | --- | --- |  --- |  --- |  --- |  --- |  --- | 
-| ssd_mobilenetv1 | only EgoHands | X | 8.20% | 0.29 | 0.24 | 0.26 | 
-| ssd_mobilenetv2 | only EgoHands| X | 3.7% | 0.17 | 0.12 | 0.14 | 
-| yolov3-tiny | only EgoHands | X | 4.37% | 0.45 | 0.08 | 0.14 | 
-| yolov4-tiny | only EgoHands | X | 28.80% | 0.65 | 0.33 | 0.44 | 
+| SSD_MobileNetv1 | only EgoHands | X | 8.20% | 0.29 | 0.24 | 0.26 | 
+| SSD_MobileNetv2 | only EgoHands| X | 3.7% | 0.17 | 0.12 | 0.14 | 
+| YOLOv3-tiny | only EgoHands | X | 4.37% | 0.45 | 0.08 | 0.14 | 
+| YOLOv4-tiny | only EgoHands | X | 28.80% | 0.65 | 0.33 | 0.44 | 
 | --- | --- |  --- |  --- |  --- |  --- |  --- | 
 | 1. 성능 향상을 위한 dataset 비율 수정 |||||||
 | yolov4-tiny | EgoHands:CMU:oxford= 2000:950:2000| X | 48.85% | 0.92 | 0.51 | 0.66 | 
-| yolov4-tiny| EgoHands:CMU:oxford=4000:950:4000 | X | 48.95% | 0.91 | 0.51 | 0.65 | 
-| yolov4-tiny | EgoHands:CMU:oxford=4000:500:2000 | X | 46.95% | 0.90 | 0.50 | 0.64 | 
+| YOLOv4-tiny | EgoHands:CMU:oxford=4000:950:4000 | X | 48.95% | 0.91 | 0.51 | 0.65 | 
+| YOLOv4-tiny | EgoHands:CMU:oxford=4000:500:2000 | X | 46.95% | 0.90 | 0.50 | 0.64 | 
 | --- | --- |  --- |  --- |  --- |  --- |  --- | 
 | 2. 성능 향상을 위한 optimizer, data augmentation option 수정|||||||
-| yolov4-tiny| EgoHands:CMU:oxford=2000:950:2000 | optimizer : momentum -> adam | 50.66% | 0.92 | 0.53 | 0.67 | 
-| yolov4-tiny | EgoHands:CMU:oxford=2000:950:2000 |data aug. : add mosaic | 39.71% | 0.83 | 0.44 | 0.58 |
+| YOLOv4-tiny | EgoHands:CMU:oxford=2000:950:2000 | optimizer : momentum -> adam | 50.66% | 0.92 | 0.53 | 0.67 | 
+| YOLOv4-tiny | EgoHands:CMU:oxford=2000:950:2000 |data aug. : add mosaic | 39.71% | 0.83 | 0.44 | 0.58 |
 
 <br />
 
