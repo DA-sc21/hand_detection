@@ -24,6 +24,10 @@ front_view/
 side_view/
 models-master/
 validation/
+dataset/augmentation_train_data/
+dataset/augmentation_test_data/
+dataset/egohand/test/
+dataset/egohand/train/
 venv/
 
 *.mp4
